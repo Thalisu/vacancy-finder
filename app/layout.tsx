@@ -14,9 +14,11 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
-        className={`${inter.className} antialiased min-h-svh w-svw flex flex-col bg-gray-950/95`}
+        className={`${inter.className} flex min-h-svh w-svw flex-col bg-gray-950/95 antialiased`}
       >
-        {children}
+        <main className="mx-2 flex flex-1 flex-col items-center justify-center">
+          {children}
+        </main>
       </body>
     </html>
   );
