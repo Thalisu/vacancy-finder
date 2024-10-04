@@ -1,4 +1,33 @@
 /** @type {import('next').NextConfig} */
-const nextConfig = {};
+function defineNextConfig(config) {
+  return config;
+}
 
-export default nextConfig;
+export default defineNextConfig({
+  webpack(config) {
+    config.module.rules.push({
+      test: /\.svg$/,
+      use: [
+        {
+          loader: "@svgr/webpack",
+          options: {
+            ref: true,
+            svgoConfig: {
+              plugins: [
+                {
+                  name: "removeViewBox",
+                  active: false,
+                },
+                {
+                  name: "mergePaths",
+                  active: false,
+                },
+              ],
+            },
+          },
+        },
+      ],
+    });
+    return config;
+  },
+});
