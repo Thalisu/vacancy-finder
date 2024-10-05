@@ -1,42 +1,49 @@
 "use client";
-import { ReactNode, useState } from "react";
 import { inter } from "../lib/fonts";
-import NewKeywordSearch from "./NewKeywordSearch";
-import SelectAndOr from "./SelectAndOr";
+import useKeywordInputs from "../hooks/useKeywordInputs";
 
 export default function KeywordField({ index }: { index: number }) {
-  const [showButton, setShowButton] = useState(false);
-  const [keywordInputs, setKeywordInputs] = useState<ReactNode[]>([
-    <NewKeywordSearch key={0} setShowButton={setShowButton} label={true} />,
-  ]);
+  const { keywordInputs, showButton, addKeyword, removeKeyword } =
+    useKeywordInputs();
+
+  const isLengthOne = keywordInputs.length === 1;
+
   return (
     <div className="relative flex min-h-32 flex-col bg-gray-950/30 p-4">
       <p className="absolute -left-1 -top-1 flex h-4 w-4 items-center justify-center rounded-full bg-white text-xs text-black">
-        {index}.
+        {index}
       </p>
       <div
         className={`${inter.className} mb-auto flex flex-wrap items-center gap-2`}
       >
-        {keywordInputs.map((input) => input)}
+        {keywordInputs.map((input) => input.node)}
       </div>
-      <button
-        type="button"
-        className={`max-w-fit rounded-xl ${showButton ? "bg-gray-950" : "bg-gray-950/50"} p-2`}
-        disabled={!showButton}
-        onClick={() => {
-          setShowButton(false);
-          setKeywordInputs((prev) => [
-            ...prev,
-            <SelectAndOr key={prev.length} />,
-            <NewKeywordSearch
-              key={prev.length + 1}
-              setShowButton={setShowButton}
-            />,
-          ]);
-        }}
-      >
-        Mais keywords
-      </button>
+      <div className="mt-2 flex gap-2">
+        <button
+          type="button"
+          className={`max-w-fit rounded-xl bg-gray-950 p-2`}
+          style={{ opacity: showButton ? "1" : ".5" }}
+          disabled={!showButton}
+          onClick={addKeyword}
+        >
+          Adicionar
+        </button>
+        <button
+          type="button"
+          className={`max-w-fit rounded-xl bg-gray-950 p-2`}
+          style={{ opacity: isLengthOne ? ".5" : "1" }}
+          disabled={isLengthOne}
+          onClick={removeKeyword}
+        >
+          Remover
+        </button>
+        <button
+          type="button"
+          className={`max-w-fit rounded-xl bg-gray-950 p-2`}
+        >
+          Salvar
+        </button>
+      </div>
     </div>
   );
 }

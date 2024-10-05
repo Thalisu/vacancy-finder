@@ -1,22 +1,38 @@
-import React, { useState } from "react";
+import { ReactNode, useState } from "react";
 import { inter } from "../lib/fonts";
 import GroupKeywordField from "./GroupKeywordField";
 import SingularKeywordField from "./SingularKeywordField";
 
 export default function NewKeywordSearch({
   setShowButton,
+  value,
+  handleValueChange,
   label,
 }: {
   setShowButton: (show: boolean) => void;
+  value: string | string[];
+  handleValueChange: (
+    newValue: string | string[],
+    keywordInputs: {
+      node: ReactNode;
+      value: string | string[];
+    }[],
+  ) => void;
   label?: boolean;
 }) {
   const [selected, setSelected] = useState("");
 
   if (selected === "group" || selected === "singular") {
     return selected === "group" ? (
-      <GroupKeywordField />
+      <GroupKeywordField
+        value={Array.isArray(value) ? value : ["", "AND", ""]}
+        handleValueChange={handleValueChange}
+      />
     ) : (
-      <SingularKeywordField />
+      <SingularKeywordField
+        value={typeof value === "string" ? value : ""}
+        handleValueChange={handleValueChange}
+      />
     );
   }
 
