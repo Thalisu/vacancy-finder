@@ -10,9 +10,11 @@ const keywordContext = createContext<{
       }[]
     >
   >;
+  saveValues: () => void;
 }>({
   keywordInputs: [],
   setKeywordInputs: () => {},
+  saveValues: () => {},
 });
 
 export default keywordContext;
