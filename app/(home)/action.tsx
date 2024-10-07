@@ -20,22 +20,26 @@ export async function search(
     throw new AppError("BaseUrl not found", 500);
   }
 
-  const url = new URL(`/api/linkedin?keywords=${keywords[0]}`, baseUrl);
-
-  const response = await fetch(url, {
-    method: "GET",
-    headers: {
-      "Content-Type": "application/json",
-    },
+  const requests = keywords.map((keyword) => {
+    const url = new URL(`/api/linkedin?keywords=${keyword}`, baseUrl);
+    return fetch(url, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
   });
-  if (!response.ok) {
-    return {
-      errors: [
-        "Não foi possivel realizar a pesquisa, tente novamente em alguns segundos",
-      ],
-      length: state.length,
-    };
+  try {
+    const responses = await Promise.all(requests);
+    const dataPromises = responses.map((response) => {
+      if (!response.ok) {
+        return [];
+      }
+      return response.json();
+    });
+    const data = await Promise.all(dataPromises);
+    return { length: state.length, data };
+  } catch (error) {
+    throw new AppError("Internal error: " + error, 500);
   }
-  const data = await response.json();
-  return { length: state.length, data };
 }
