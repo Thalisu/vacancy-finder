@@ -42,7 +42,7 @@ export default function KeywordField({ index }: { index: number }) {
           className={`max-w-fit rounded-xl bg-gray-950 p-2`}
           style={{ opacity: showButton ? "1" : ".5" }}
           disabled={!showButton}
-          onClick={saveSearch}
+          onClick={() => saveSearch(index)}
         >
           Salvar
         </button>

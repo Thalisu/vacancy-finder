@@ -96,7 +96,7 @@ const useKeywordInputs = () => {
     });
   };
 
-  const saveSearch = () => {
+  const saveSearch = (index: number) => {
     setShowButton(false);
     setKeywordInputs((prev) => {
       const values = prev.map((p) => {
@@ -112,6 +112,7 @@ const useKeywordInputs = () => {
               <SavedKeywordField
                 handler={handleExactSearch}
                 values={value as string[]}
+                index={index - 1}
                 key={0}
               />
             );
