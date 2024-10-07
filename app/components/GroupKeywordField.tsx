@@ -1,44 +1,36 @@
 "use client";
-import { ReactNode, useContext, useState } from "react";
+import { useState } from "react";
 import { MinusSVG, PlusSVG } from "./svgs";
 import { inter } from "../lib/fonts";
 import KeywordInput from "./KeywordInput";
 import SelectAndOr from "./SelectAndOr";
-import keywordContext from "../context/keyword.context";
 
 export default function GroupKeywordField({
   value,
   handleValueChange,
 }: {
   value: string[];
-  handleValueChange: (
-    newValue: string | string[],
-    keywordInputs: {
-      node: ReactNode;
-      value: string | string[];
-    }[],
-  ) => void;
+  handleValueChange: (newValue: string | string[]) => void;
 }) {
   const [val, setVal] = useState<string[]>([...value]);
-  const { keywordInputs: keywordContextInputs } = useContext(keywordContext);
 
   const handleChange = (index: number, newValue: string) => {
     const toUpdate = [...val];
     toUpdate[index] = newValue;
     setVal(() => [...toUpdate]);
-    handleValueChange(toUpdate, keywordContextInputs);
+    handleValueChange(toUpdate);
   };
 
   const addKeyword = () => {
     const toUpdate = [...val, "AND", ""];
     setVal(() => toUpdate);
-    handleValueChange(toUpdate, keywordContextInputs);
+    handleValueChange(toUpdate);
   };
 
   const removeKeyword = () => {
     const toUpdate = [...val.slice(0, -2)];
     setVal(() => toUpdate);
-    handleValueChange(toUpdate, keywordContextInputs);
+    handleValueChange(toUpdate);
   };
 
   return (

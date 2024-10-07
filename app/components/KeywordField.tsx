@@ -1,13 +1,10 @@
 "use client";
 import { inter } from "../lib/fonts";
 import useKeywordInputs from "../hooks/useKeywordInputs";
-import { useContext } from "react";
-import keywordContext from "../context/keyword.context";
 
 export default function KeywordField({ index }: { index: number }) {
-  const { keywordInputs, showButton, addKeyword, removeKeyword } =
+  const { keywordInputs, showButton, addKeyword, removeKeyword, saveSearch } =
     useKeywordInputs();
-  const { saveValues } = useContext(keywordContext);
 
   const isLengthOne = keywordInputs.length === 1;
 
@@ -43,7 +40,9 @@ export default function KeywordField({ index }: { index: number }) {
         <button
           type="button"
           className={`max-w-fit rounded-xl bg-gray-950 p-2`}
-          onClick={saveValues}
+          style={{ opacity: showButton ? "1" : ".5" }}
+          disabled={!showButton}
+          onClick={saveSearch}
         >
           Salvar
         </button>

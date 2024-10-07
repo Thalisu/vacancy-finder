@@ -1,4 +1,4 @@
-import { ReactNode, useState } from "react";
+import { useState } from "react";
 import { inter } from "../lib/fonts";
 import GroupKeywordField from "./GroupKeywordField";
 import SingularKeywordField from "./SingularKeywordField";
@@ -11,13 +11,7 @@ export default function NewKeywordSearch({
 }: {
   setShowButton: (show: boolean) => void;
   value: string | string[];
-  handleValueChange: (
-    newValue: string | string[],
-    keywordInputs: {
-      node: ReactNode;
-      value: string | string[];
-    }[],
-  ) => void;
+  handleValueChange: (newValue: string | string[]) => void;
   label?: boolean;
 }) {
   const [selected, setSelected] = useState("");

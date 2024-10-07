@@ -1,24 +1,20 @@
-import { ReactNode, useCallback, useContext, useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import NewKeywordSearch from "../components/NewKeywordSearch";
 import SelectAndOr from "../components/SelectAndOr";
-import keywordContext from "../context/keyword.context";
+import { IKeywordInput } from "../lib/types";
+import SavedKeywordField from "../components/SavedKeywordField";
 
 const useKeywordInputs = () => {
+  const [keywordInputs, setKeywordInputs] = useState<IKeywordInput[]>([]);
   const [showButton, setShowButton] = useState(false);
-  const { keywordInputs, setKeywordInputs } = useContext(keywordContext);
 
   const handleValueChange = useCallback(
-    (
-      index: number,
-      newValue: string | string[],
-      keywordInputs: {
-        node: ReactNode;
-        value: string | string[];
-      }[],
-    ) => {
-      const toUpdate = [...keywordInputs];
-      toUpdate[index].value = newValue;
-      setKeywordInputs(() => [...toUpdate]);
+    (index: number, newValue: string | string[]) => {
+      setKeywordInputs((prev) => {
+        const toUpdate = [...prev];
+        toUpdate[index].value = newValue;
+        return [...toUpdate];
+      });
     },
     [setKeywordInputs],
   );
@@ -35,13 +31,9 @@ const useKeywordInputs = () => {
               setShowButton={setShowButton}
               label={true}
               value={value}
-              handleValueChange={(
-                newValue: string | string[],
-                keywordInputs: {
-                  node: ReactNode;
-                  value: string | string[];
-                }[],
-              ) => handleValueChange(0, newValue, keywordInputs)}
+              handleValueChange={(newValue: string | string[]) =>
+                handleValueChange(0, newValue)
+              }
             />
           );
         },
@@ -61,13 +53,9 @@ const useKeywordInputs = () => {
             <SelectAndOr
               key={prev.length}
               value={typeof value === "string" ? value : "AND"}
-              handleChange={(
-                newValue: string,
-                keywordInputs: {
-                  node: ReactNode;
-                  value: string | string[];
-                }[],
-              ) => handleValueChange(prev.length, newValue, keywordInputs)}
+              handleChange={(newValue: string) =>
+                handleValueChange(prev.length, newValue)
+              }
             />
           );
         },
@@ -81,13 +69,9 @@ const useKeywordInputs = () => {
               key={prev.length + 1}
               setShowButton={setShowButton}
               value={value}
-              handleValueChange={(
-                newValue: string | string[],
-                keywordInputs: {
-                  node: ReactNode;
-                  value: string | string[];
-                }[],
-              ) => handleValueChange(prev.length + 1, newValue, keywordInputs)}
+              handleValueChange={(newValue: string | string[]) =>
+                handleValueChange(prev.length + 1, newValue)
+              }
             />
           );
         },
@@ -100,12 +84,28 @@ const useKeywordInputs = () => {
     setKeywordInputs((prev) => prev.slice(0, -2));
   };
 
+  const saveSearch = () => {
+    setShowButton(false);
+    setKeywordInputs((prev) => {
+      const values = prev.map((p) => {
+        return Array.isArray(p.value) ? `(${p.value.join(" ")})` : p.value;
+      });
+      return [
+        {
+          node: <SavedKeywordField value={values.join(" ")} />,
+          value: prev.map((p) => p.value) as string[],
+        },
+      ];
+    });
+  };
+
   return {
     keywordInputs,
     addKeyword,
     removeKeyword,
     handleValueChange,
     showButton,
+    saveSearch,
   };
 };
 
