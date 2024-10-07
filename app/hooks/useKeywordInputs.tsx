@@ -84,16 +84,38 @@ const useKeywordInputs = () => {
     setKeywordInputs((prev) => prev.slice(0, -2));
   };
 
+  const handleExactSearch = (value: string, index: number) => {
+    setKeywordInputs((prev) => {
+      const toUpdate = [...prev];
+      if (Array.isArray(toUpdate[0].value)) {
+        toUpdate[0].value[index] = value.startsWith(`"`)
+          ? value.replaceAll(`"`, ``)
+          : `"${value}"`;
+      }
+      return [...toUpdate];
+    });
+  };
+
   const saveSearch = () => {
     setShowButton(false);
     setKeywordInputs((prev) => {
       const values = prev.map((p) => {
-        return Array.isArray(p.value) ? `(${p.value.join(" ")})` : p.value;
+        return Array.isArray(p.value) ? ["(", ...p.value, ")"] : [p.value];
       });
+
       return [
         {
-          node: <SavedKeywordField value={values.join(" ")} />,
-          value: prev.map((p) => p.value) as string[],
+          value: values.flat(),
+          get node() {
+            const value = this.value;
+            return (
+              <SavedKeywordField
+                handler={handleExactSearch}
+                values={value as string[]}
+                key={0}
+              />
+            );
+          },
         },
       ];
     });
