@@ -1,10 +1,23 @@
 "use client";
 import { inter } from "../lib/fonts";
 import useKeywordInputs from "../hooks/useKeywordInputs";
+import Select from "./Select";
+import { Dispatch, SetStateAction } from "react";
 
-export default function KeywordField({ index }: { index: number }) {
-  const { keywordInputs, showButton, addKeyword, removeKeyword, saveSearch } =
-    useKeywordInputs();
+export default function KeywordField({
+  index,
+  setIsSearchAvailable,
+}: {
+  index: number;
+  setIsSearchAvailable: Dispatch<SetStateAction<boolean>>;
+}) {
+  const {
+    keywordInputs,
+    isAllInputsWithValue,
+    addKeyword,
+    removeKeyword,
+    saveSearch,
+  } = useKeywordInputs(setIsSearchAvailable);
 
   const isLengthOne = keywordInputs.length === 1;
 
@@ -18,12 +31,33 @@ export default function KeywordField({ index }: { index: number }) {
       >
         {keywordInputs.map((input) => input.node)}
       </div>
+      <div className="mt-2 flex flex-col gap-2">
+        <Select id="time" label="Período: " index={index - 1}>
+          <option value="r86400">Útimas 24 horas</option>
+          <option value="r604800">Útima semana</option>
+          <option value="r2592000">Útimo mês</option>
+        </Select>
+        <Select id="remote" label="Remoto: " index={index - 1}>
+          <option value="1%2C2%2C3">Todas as vagas</option>
+          <option value="3">Somente Híbridas</option>
+          <option value="2">Somente Remotas</option>
+          <option value="1">Somente Presenciais</option>
+        </Select>
+        <Select
+          id="local"
+          label="Local: "
+          index={index - 1}
+          selectConfig={{ disabled: true }}
+        >
+          <option value="Brazil">Brasil</option>
+        </Select>
+      </div>
       <div className="mt-2 flex gap-2">
         <button
           type="button"
           className={`max-w-fit rounded-xl bg-gray-950 p-2`}
-          style={{ opacity: showButton ? "1" : ".5" }}
-          disabled={!showButton}
+          style={{ opacity: isAllInputsWithValue ? "1" : ".5" }}
+          disabled={!isAllInputsWithValue}
           onClick={addKeyword}
         >
           Adicionar
@@ -40,8 +74,8 @@ export default function KeywordField({ index }: { index: number }) {
         <button
           type="button"
           className={`max-w-fit rounded-xl bg-gray-950 p-2`}
-          style={{ opacity: showButton ? "1" : ".5" }}
-          disabled={!showButton}
+          style={{ opacity: isAllInputsWithValue ? "1" : ".5" }}
+          disabled={!isAllInputsWithValue}
           onClick={() => saveSearch(index)}
         >
           Salvar

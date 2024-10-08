@@ -7,12 +7,18 @@ export async function search(
   state: IFormState,
   formData: FormData,
 ): Promise<IFormState> {
-  const keywords = new Array(state.length).fill(0).map((x, i) => {
-    return formData
+  const currentSearchsLength = new Array(state.length).fill(0);
+  const searchs = currentSearchsLength.map((x, i) => {
+    const keywords = formData
       .getAll(`keyword-${i}`)
       .join(" ")
       .replace(/\s\(\s/g, " (")
       .replace(/\s\)\s/g, ") ");
+
+    const timeframe = formData.get(`time-${i}`);
+    const remote = formData.get(`remote-${i}`);
+    const local = "Brazil";
+    return { keywords, timeframe, remote, local };
   });
 
   const baseUrl = headers().get("x-url");
@@ -20,8 +26,11 @@ export async function search(
     throw new AppError("BaseUrl not found", 500);
   }
 
-  const requests = keywords.map((keyword) => {
-    const url = new URL(`/api/linkedin?keywords=${keyword}`, baseUrl);
+  const requests = searchs.map((search) => {
+    const url = new URL(
+      `/api/linkedin?keywords=${search.keywords}&timeframe=${search.timeframe}&remote=${search.remote}&location=${search.local}`,
+      baseUrl,
+    );
     return fetch(url, {
       method: "GET",
       headers: {
@@ -38,7 +47,7 @@ export async function search(
       return response.json();
     });
     const data = await Promise.all(dataPromises);
-    return { length: state.length, data };
+    return { ...state, data, loading: false };
   } catch (error) {
     throw new AppError("Internal error: " + error, 500);
   }
