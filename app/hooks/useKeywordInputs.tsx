@@ -1,12 +1,24 @@
-import { useCallback, useEffect, useState } from "react";
+import {
+  Dispatch,
+  SetStateAction,
+  useCallback,
+  useEffect,
+  useState,
+} from "react";
 import NewKeywordSearch from "../components/NewKeywordSearch";
 import SelectAndOr from "../components/SelectAndOr";
 import { IKeywordInput } from "../lib/types";
 import SavedKeywordField from "../components/SavedKeywordField";
+import { addToLocalStorage } from "../lib/utils";
 
-const useKeywordInputs = () => {
+const useKeywordInputs = (
+  setIsSearchAvailable: Dispatch<SetStateAction<boolean>>,
+) => {
   const [keywordInputs, setKeywordInputs] = useState<IKeywordInput[]>([]);
-  const [showButton, setShowButton] = useState(false);
+  const isAllInputsWithValue = keywordInputs.every((i) => {
+    if (i.saved) return false;
+    return Array.isArray(i.value) ? i.value.every((v) => v) : i.value;
+  });
 
   const handleValueChange = useCallback(
     (index: number, newValue: string | string[]) => {
@@ -28,7 +40,6 @@ const useKeywordInputs = () => {
           return (
             <NewKeywordSearch
               key={0}
-              setShowButton={setShowButton}
               label={true}
               value={value}
               handleValueChange={(newValue: string | string[]) =>
@@ -42,7 +53,6 @@ const useKeywordInputs = () => {
   }, [setKeywordInputs, handleValueChange]);
 
   const addKeyword = () => {
-    setShowButton(false);
     setKeywordInputs((prev) => [
       ...prev,
       {
@@ -67,7 +77,6 @@ const useKeywordInputs = () => {
           return (
             <NewKeywordSearch
               key={prev.length + 1}
-              setShowButton={setShowButton}
               value={value}
               handleValueChange={(newValue: string | string[]) =>
                 handleValueChange(prev.length + 1, newValue)
@@ -80,7 +89,6 @@ const useKeywordInputs = () => {
   };
 
   const removeKeyword = () => {
-    setShowButton(true);
     setKeywordInputs((prev) => prev.slice(0, -2));
   };
 
@@ -97,11 +105,14 @@ const useKeywordInputs = () => {
   };
 
   const saveSearch = (index: number) => {
-    setShowButton(false);
     setKeywordInputs((prev) => {
       const values = prev.map((p) => {
         return Array.isArray(p.value) ? ["(", ...p.value, ")"] : [p.value];
       });
+
+      setIsSearchAvailable(() => true);
+
+      addToLocalStorage(`@Search ${index}`, values.flat());
 
       return [
         {
@@ -117,6 +128,7 @@ const useKeywordInputs = () => {
               />
             );
           },
+          saved: true,
         },
       ];
     });
@@ -127,7 +139,7 @@ const useKeywordInputs = () => {
     addKeyword,
     removeKeyword,
     handleValueChange,
-    showButton,
+    isAllInputsWithValue,
     saveSearch,
   };
 };
