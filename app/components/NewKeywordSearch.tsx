@@ -4,12 +4,10 @@ import GroupKeywordField from "./GroupKeywordField";
 import SingularKeywordField from "./SingularKeywordField";
 
 export default function NewKeywordSearch({
-  setShowButton,
   value,
   handleValueChange,
   label,
 }: {
-  setShowButton: (show: boolean) => void;
   value: string | string[];
   handleValueChange: (newValue: string | string[]) => void;
   label?: boolean;
@@ -37,7 +35,6 @@ export default function NewKeywordSearch({
         name="search"
         id="search"
         onChange={(e) => {
-          setShowButton(true);
           setSelected(e.currentTarget.value);
         }}
         className="max-w-fit rounded-md bg-gray-800 p-2"
