@@ -1,5 +1,5 @@
 import { useFormState } from "react-dom";
-import { search } from "../(home)/action";
+import { search } from "@/app/(pages)/(home)/action";
 import { ReactNode, useEffect, useState } from "react";
 import KeywordField from "../components/KeywordField";
 import { getAllSearchsFromLocalStorage } from "../lib/utils";
