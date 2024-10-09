@@ -1,7 +1,7 @@
 "use server";
 import { headers } from "next/headers";
-import { IFormState } from "../lib/types";
-import AppError from "../errors/appError";
+import { IFormState } from "@/app/lib/types";
+import AppError from "@/app/errors/appError";
 
 export async function search(
   state: IFormState,

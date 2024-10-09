@@ -1,5 +1,5 @@
 "use client";
-import useKeywordForm from "../hooks/useKeywordForm";
+import useKeywordForm from "@/app/hooks/useKeywordForm";
 
 export default function KeywordForm() {
   const { action, handleNewSearch, searchs, isSearchAvailable } =
