@@ -1,18 +1,9 @@
 "use client";
-import { useState, ReactNode } from "react";
-import KeywordField from "../components/KeywordField";
 import useKeywordForm from "../hooks/useKeywordForm";
 
 export default function KeywordForm() {
-  const [isSearchAvailable, setIsSearchAvailable] = useState(false);
-  const [searchs, setSearchs] = useState<ReactNode[]>([
-    <KeywordField
-      key={0}
-      index={1}
-      setIsSearchAvailable={setIsSearchAvailable}
-    />,
-  ]);
-  const { action } = useKeywordForm(searchs.length);
+  const { action, handleNewSearch, searchs, isSearchAvailable } =
+    useKeywordForm();
 
   return (
     <form
@@ -28,17 +19,7 @@ export default function KeywordForm() {
           disabled={!isSearchAvailable}
           className="flex w-fit max-w-fit items-center justify-center gap-2 rounded-xl bg-gray-950 p-3"
           style={{ opacity: isSearchAvailable ? 1 : 0.5 }}
-          onClick={() => {
-            setIsSearchAvailable(() => false);
-            setSearchs((prev) => [
-              ...prev,
-              <KeywordField
-                key={prev.length}
-                index={prev.length + 1}
-                setIsSearchAvailable={setIsSearchAvailable}
-              />,
-            ]);
-          }}
+          onClick={handleNewSearch}
         >
           Mais pesquisas
         </button>
