@@ -18,6 +18,7 @@ export default function SelectAndOr({
         AND
       </option>
       <option value="OR">OR</option>
+      <option value="NOT">NOT</option>
     </select>
   );
 }

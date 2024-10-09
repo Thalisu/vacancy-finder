@@ -10,7 +10,8 @@ export default function SavedKeywordField({
   handler: (value: string, index: number) => void;
 }) {
   const isKeyword = values.map((v) => {
-    const is = v === "AND" || v === "OR" || v === "(" || v === ")";
+    const is =
+      v === "AND" || v === "NOT" || v === "OR" || v === "(" || v === ")";
     return !is;
   });
   return (
