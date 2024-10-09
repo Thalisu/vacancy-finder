@@ -9,10 +9,15 @@ import NewKeywordSearch from "../components/NewKeywordSearch";
 import SelectAndOr from "../components/SelectAndOr";
 import { IKeywordInput } from "../lib/types";
 import SavedKeywordField from "../components/SavedKeywordField";
-import { addToLocalStorage } from "../lib/utils";
+import {
+  addToLocalStorage,
+  getFromLocalStorage,
+  updateLocalStorage,
+} from "../lib/utils";
 
 const useKeywordInputs = (
   setIsSearchAvailable: Dispatch<SetStateAction<boolean>>,
+  searchIndex: number,
 ) => {
   const [keywordInputs, setKeywordInputs] = useState<IKeywordInput[]>([]);
   const isAllInputsWithValue = keywordInputs.every((i) => {
@@ -31,26 +36,71 @@ const useKeywordInputs = (
     [setKeywordInputs],
   );
 
+  const handleExactSearch = useCallback(
+    (value: string, index: number) => {
+      setKeywordInputs((prev) => {
+        const toUpdate = [...prev];
+        if (Array.isArray(toUpdate[0].value)) {
+          toUpdate[0].value[index] = value.startsWith(`"`)
+            ? value.replaceAll(`"`, ``)
+            : `"${value}"`;
+        }
+        updateLocalStorage(`@Search ${searchIndex - 1}`, toUpdate[0].value);
+        return [...toUpdate];
+      });
+    },
+    [searchIndex],
+  );
+
   useEffect(() => {
-    setKeywordInputs(() => [
-      {
-        value: "",
-        get node() {
-          const value = this.value;
-          return (
-            <NewKeywordSearch
-              key={0}
-              label={true}
-              value={value}
-              handleValueChange={(newValue: string | string[]) =>
-                handleValueChange(0, newValue)
-              }
-            />
-          );
+    const savedKeywords = getFromLocalStorage(`@Search ${searchIndex - 1}`);
+    if (savedKeywords.length) setIsSearchAvailable(() => true);
+    setKeywordInputs(() => {
+      if (savedKeywords.length) {
+        return [
+          {
+            value: savedKeywords,
+            get node() {
+              const value = this.value;
+              return (
+                <SavedKeywordField
+                  handler={handleExactSearch}
+                  values={value as string[]}
+                  index={searchIndex - 1}
+                  key={0}
+                />
+              );
+            },
+            saved: true,
+          },
+        ];
+      }
+      return [
+        {
+          value: "",
+          get node() {
+            const value = this.value;
+            return (
+              <NewKeywordSearch
+                key={0}
+                label={true}
+                value={value}
+                handleValueChange={(newValue: string | string[]) =>
+                  handleValueChange(0, newValue)
+                }
+              />
+            );
+          },
         },
-      },
-    ]);
-  }, [setKeywordInputs, handleValueChange]);
+      ];
+    });
+  }, [
+    setKeywordInputs,
+    handleValueChange,
+    searchIndex,
+    setIsSearchAvailable,
+    handleExactSearch,
+  ]);
 
   const addKeyword = () => {
     setKeywordInputs((prev) => [
@@ -92,19 +142,7 @@ const useKeywordInputs = (
     setKeywordInputs((prev) => prev.slice(0, -2));
   };
 
-  const handleExactSearch = (value: string, index: number) => {
-    setKeywordInputs((prev) => {
-      const toUpdate = [...prev];
-      if (Array.isArray(toUpdate[0].value)) {
-        toUpdate[0].value[index] = value.startsWith(`"`)
-          ? value.replaceAll(`"`, ``)
-          : `"${value}"`;
-      }
-      return [...toUpdate];
-    });
-  };
-
-  const saveSearch = (index: number) => {
+  const saveSearch = () => {
     setKeywordInputs((prev) => {
       const values = prev.map((p) => {
         return Array.isArray(p.value) ? ["(", ...p.value, ")"] : [p.value];
@@ -112,7 +150,7 @@ const useKeywordInputs = (
 
       setIsSearchAvailable(() => true);
 
-      addToLocalStorage(`@Search ${index}`, values.flat());
+      addToLocalStorage(`@Search ${searchIndex - 1}`, values.flat());
 
       return [
         {
@@ -123,7 +161,7 @@ const useKeywordInputs = (
               <SavedKeywordField
                 handler={handleExactSearch}
                 values={value as string[]}
-                index={index - 1}
+                index={searchIndex - 1}
                 key={0}
               />
             );
