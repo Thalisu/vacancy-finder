@@ -17,7 +17,7 @@ export default function KeywordField({
     addKeyword,
     removeKeyword,
     saveSearch,
-  } = useKeywordInputs(setIsSearchAvailable);
+  } = useKeywordInputs(setIsSearchAvailable, index);
 
   const isLengthOne = keywordInputs.length === 1;
 
@@ -76,7 +76,7 @@ export default function KeywordField({
           className={`max-w-fit rounded-xl bg-gray-950 p-2`}
           style={{ opacity: isAllInputsWithValue ? "1" : ".5" }}
           disabled={!isAllInputsWithValue}
-          onClick={() => saveSearch(index)}
+          onClick={() => saveSearch()}
         >
           Salvar
         </button>
