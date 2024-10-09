@@ -34,7 +34,7 @@ const useKeywordForm = () => {
   }, []);
 
   const [state, action] = useFormState(search, {
-    length: searchs.length,
+    length: searchs.length + 1,
     data: [],
     errors: [],
     loading: true,
