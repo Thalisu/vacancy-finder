@@ -54,9 +54,9 @@ const useKeywordInputs = (
 
   useEffect(() => {
     const savedKeywords = getFromLocalStorage(`@Search ${searchIndex - 1}`);
-    if (savedKeywords.length) setIsSearchAvailable(() => true);
+    if (savedKeywords?.length) setIsSearchAvailable(() => true);
     setKeywordInputs(() => {
-      if (savedKeywords.length) {
+      if (savedKeywords?.length) {
         return [
           {
             value: savedKeywords,
