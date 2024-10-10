@@ -19,7 +19,7 @@ export interface IFormStateData {
 
 export interface IFormState {
   length: number;
-  data: IFormStateData[];
+  jobs: IFormStateData[];
   errors: unknown[];
   loading: boolean;
 }

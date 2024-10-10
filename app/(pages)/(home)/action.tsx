@@ -46,8 +46,8 @@ export async function search(
       }
       return response.json();
     });
-    const data = await Promise.all(dataPromises);
-    return { ...state, data, loading: false };
+    const jobs = await Promise.all(dataPromises);
+    return { ...state, jobs, loading: false };
   } catch (error) {
     throw new AppError("Internal error: " + error, 500);
   }
