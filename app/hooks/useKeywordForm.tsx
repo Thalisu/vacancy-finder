@@ -1,12 +1,22 @@
 import { useFormState } from "react-dom";
 import { search } from "@/app/(pages)/(home)/action";
-import { ReactNode, useEffect, useState } from "react";
+import { ReactNode, useContext, useEffect, useState } from "react";
 import KeywordField from "../components/KeywordField";
 import { getAllSearchsFromLocalStorage } from "../lib/utils";
+import jobDataContext from "../context/jobData.context";
+import { redirect } from "next/navigation";
 
 const useKeywordForm = () => {
   const [isSearchAvailable, setIsSearchAvailable] = useState(false);
   const [searchs, setSearchs] = useState<ReactNode[]>([]);
+  const [state, action] = useFormState(search, {
+    length: searchs.length,
+    jobs: [],
+    errors: [],
+    loading: true,
+  });
+  const { handleSetData } = useContext(jobDataContext);
+
   useEffect(() => {
     const savedKeywords = getAllSearchsFromLocalStorage();
     let initialValue: ReactNode[] = [];
@@ -30,15 +40,10 @@ const useKeywordForm = () => {
       ];
     }
 
-    setSearchs(() => initialValue);
-  }, []);
+    state.length = initialValue.length;
 
-  const [state, action] = useFormState(search, {
-    length: searchs.length + 1,
-    jobs: [],
-    errors: [],
-    loading: true,
-  });
+    setSearchs(() => initialValue);
+  }, [state]);
 
   const handleNewSearch = () => {
     setIsSearchAvailable(() => false);
@@ -54,7 +59,9 @@ const useKeywordForm = () => {
 
   useEffect(() => {
     if (state.loading) return;
-  }, [state]);
+    handleSetData(state);
+    redirect("/jobs");
+  }, [state, handleSetData]);
 
   return { action, handleNewSearch, searchs, isSearchAvailable };
 };
