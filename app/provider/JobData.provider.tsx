@@ -9,7 +9,13 @@ export default function JobDataProvider({
 }: {
   children: React.ReactNode;
 }) {
-  const [data, setData] = useState<IFormState>();
+  const [data, setData] = useState<IFormState>({
+    length: 0,
+    jobs: [],
+    errors: [],
+    loading: true,
+  });
+
   const handleSetData = (data: IFormState) => {
     //Todo data type validation
     setData(() => data);
