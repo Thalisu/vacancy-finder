@@ -4,6 +4,14 @@ function defineNextConfig(config) {
 }
 
 export default defineNextConfig({
+  images: {
+    remotePatterns: [
+      {
+        protocol: "https",
+        hostname: "media.licdn.com",
+      },
+    ],
+  },
   webpack(config) {
     config.module.rules.push({
       test: /\.svg$/,
