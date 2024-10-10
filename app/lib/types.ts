@@ -15,11 +15,13 @@ export interface IFormStateErrors {
 export interface IFormStateData {
   title: string;
   url: string;
+  enterprise: string;
+  img: string;
 }
 
 export interface IFormState {
   length: number;
-  jobs: IFormStateData[];
+  jobs: IFormStateData[][];
   errors: unknown[];
   loading: boolean;
 }

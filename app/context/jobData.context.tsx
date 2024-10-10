@@ -1,9 +1,9 @@
 import { createContext } from "react";
-import { IFormState, IFormStateData } from "../lib/types";
+import { IFormState } from "../lib/types";
 
 const jobDataContext = createContext<{
   data: IFormState;
-  handleSetData: (data: IFormStateData) => void;
+  handleSetData: (data: IFormState) => void;
 }>({
   data: {
     length: 0,
