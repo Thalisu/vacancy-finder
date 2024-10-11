@@ -1,10 +1,10 @@
 "use client";
 import { inter } from "../lib/fonts";
 import useKeywordInputs from "../hooks/useKeywordInputs";
-import Select from "./Select";
-import { ChangeEvent, Dispatch, SetStateAction } from "react";
+import { Dispatch, SetStateAction } from "react";
 import SavedSearchButtons from "./SavedSearchButtons";
 import NotSavedSearchButtons from "./NotSavedSearchButtons";
+import JobDataSelects from "./JobDataSelects";
 
 export default function KeywordField({
   index,
@@ -22,6 +22,7 @@ export default function KeywordField({
     isSaved,
     jobSearchData,
     handleSetJobSearchData,
+    editSearch,
   } = useKeywordInputs(setIsSearchAvailable, index);
 
   const isLengthOne = keywordInputs.length === 1;
@@ -40,53 +41,15 @@ export default function KeywordField({
       {isSaved ? (
         <SavedSearchButtons
           values={keywordInputs.map((i) => i.value as string[]).flat()}
+          editSearch={editSearch}
         />
       ) : (
         <>
-          <div className="mt-2 flex flex-col gap-2">
-            <Select
-              id="time"
-              label="Período: "
-              index={index - 1}
-              selectConfig={{
-                value: jobSearchData.time,
-                onChange: (e: ChangeEvent<HTMLSelectElement>) =>
-                  handleSetJobSearchData({ time: e.target.value }),
-              }}
-            >
-              <option value="r86400">Útimas 24 horas</option>
-              <option value="r604800">Útima semana</option>
-              <option value="r2592000">Útimo mês</option>
-            </Select>
-            <Select
-              id="remote"
-              label="Remoto: "
-              index={index - 1}
-              selectConfig={{
-                value: jobSearchData.remote,
-                onChange: (e: ChangeEvent<HTMLSelectElement>) =>
-                  handleSetJobSearchData({ remote: e.target.value }),
-              }}
-            >
-              <option value="1%2C2%2C3">Todas as vagas</option>
-              <option value="3">Somente Híbridas</option>
-              <option value="2">Somente Remotas</option>
-              <option value="1">Somente Presenciais</option>
-            </Select>
-            <Select
-              id="local"
-              label="Local: "
-              index={index - 1}
-              selectConfig={{
-                disabled: true,
-                value: jobSearchData.location,
-                onChange: (e: ChangeEvent<HTMLSelectElement>) =>
-                  handleSetJobSearchData({ location: e.target.value }),
-              }}
-            >
-              <option value="Brazil">Brasil</option>
-            </Select>
-          </div>
+          <JobDataSelects
+            index={index}
+            jobSearchData={jobSearchData}
+            handleSetJobSearchData={handleSetJobSearchData}
+          />
           <NotSavedSearchButtons
             isAllInputsWithValue={isAllInputsWithValue}
             isLengthOne={isLengthOne}

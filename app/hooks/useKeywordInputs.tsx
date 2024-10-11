@@ -14,6 +14,8 @@ import {
   getFromLocalStorage,
   updateLocalStorage,
 } from "../lib/utils";
+import SingularKeywordField from "../components/SingularKeywordField";
+import GroupKeywordField from "../components/GroupKeywordField";
 
 const useKeywordInputs = (
   setIsSearchAvailable: Dispatch<SetStateAction<boolean>>,
@@ -37,6 +39,7 @@ const useKeywordInputs = (
       setKeywordInputs((prev) => {
         const toUpdate = [...prev];
         toUpdate[index].value = newValue;
+        console.log(index, newValue);
         return [...toUpdate];
       });
     },
@@ -61,6 +64,9 @@ const useKeywordInputs = (
 
   useEffect(() => {
     const savedKeywords = getFromLocalStorage(`@Search ${searchIndex - 1}`);
+    const savedJobData = getFromLocalStorage(`@jobData ${searchIndex - 1}`);
+
+    if (savedJobData) setJobSearchData(() => savedJobData);
     if (savedKeywords?.length) setIsSearchAvailable(() => true);
     setKeywordInputs(() => {
       if (savedKeywords?.length) {
@@ -74,7 +80,15 @@ const useKeywordInputs = (
                   handler={handleExactSearch}
                   values={value as string[]}
                   index={searchIndex - 1}
-                  jobSearchData={jobSearchData}
+                  jobSearchData={
+                    savedJobData
+                      ? savedJobData
+                      : {
+                          time: "r86400",
+                          remote: "1%2C2%2C3",
+                          location: "Brazil",
+                        }
+                  }
                   key={0}
                 />
               );
@@ -187,6 +201,109 @@ const useKeywordInputs = (
     });
   };
 
+  const editSearch = () => {
+    setIsSearchAvailable(() => false);
+    const selects = ["AND", "OR", "NOT"];
+    setKeywordInputs((prev) => {
+      let isGroup = false;
+      let groupValue: string[] = [];
+      let isSingular = false;
+      let key = 0;
+
+      const keywordValues = prev[0].value as string[];
+
+      const keywordInputs = keywordValues.map((value) => {
+        if (value === "(") {
+          isGroup = true;
+          groupValue = [];
+          return "";
+        }
+        if (value === ")") {
+          isGroup = false;
+          const currentKey = key++;
+          return {
+            value: groupValue,
+            get node() {
+              const value = (this as IKeywordInput).value;
+              return (
+                <GroupKeywordField
+                  value={value as string[]}
+                  key={currentKey}
+                  handleValueChange={(newValue: string | string[]) =>
+                    handleValueChange(currentKey, newValue)
+                  }
+                />
+              );
+            },
+          };
+        }
+        if (isGroup) {
+          groupValue = [...groupValue, value];
+          return "";
+        }
+        if (selects.includes(value)) {
+          isSingular = true;
+          const currentKey = key++;
+          return {
+            value,
+            get node() {
+              const value = (this as IKeywordInput).value;
+              return (
+                <SelectAndOr
+                  key={currentKey}
+                  value={value as string}
+                  handleChange={(newValue: string) =>
+                    handleValueChange(currentKey, newValue)
+                  }
+                />
+              );
+            },
+          };
+        }
+
+        if (isSingular) {
+          isSingular = false;
+          const currentKey = key++;
+          return {
+            value,
+            get node() {
+              const value = (this as IKeywordInput).value;
+              return (
+                <SingularKeywordField
+                  value={value as string}
+                  key={currentKey}
+                  handleValueChange={(newValue: string | string[]) =>
+                    handleValueChange(currentKey, newValue)
+                  }
+                />
+              );
+            },
+          };
+        }
+
+        if (!isGroup) {
+          const currentKey = key++;
+          return {
+            value,
+            get node() {
+              const value = (this as IKeywordInput).value;
+              return (
+                <SingularKeywordField
+                  value={value as string}
+                  key={currentKey}
+                  handleValueChange={(newValue: string | string[]) => {
+                    handleValueChange(currentKey, newValue);
+                  }}
+                />
+              );
+            },
+          };
+        }
+      });
+      return keywordInputs.filter((i) => i !== "") as IKeywordInput[];
+    });
+  };
+
   return {
     keywordInputs,
     addKeyword,
@@ -194,6 +311,7 @@ const useKeywordInputs = (
     handleValueChange,
     isAllInputsWithValue,
     saveSearch,
+    editSearch,
     isSaved,
     jobSearchData,
     handleSetJobSearchData,
