@@ -1,11 +1,11 @@
-import JobScrapper from "@/VacancyScrapper/index"
+import JobScrapper from "@/VacancyScrapper/index";
 
 const getLinkedinJobs = async (
   keywords = "",
   location = "",
   timeframe = "",
   remote = "",
-  page = ""
+  page = "",
 ) => {
   const scrapper = new JobScrapper(keywords, location, timeframe, remote, page);
   return await scrapper.linkedin();
