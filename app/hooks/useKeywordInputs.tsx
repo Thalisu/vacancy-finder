@@ -24,6 +24,7 @@ const useKeywordInputs = (
     if (i.saved) return false;
     return Array.isArray(i.value) ? i.value.every((v) => v) : i.value;
   });
+  const isSaved = keywordInputs.every((i) => i.saved);
 
   const handleValueChange = useCallback(
     (index: number, newValue: string | string[]) => {
@@ -143,12 +144,11 @@ const useKeywordInputs = (
   };
 
   const saveSearch = () => {
+    setIsSearchAvailable(() => true);
     setKeywordInputs((prev) => {
       const values = prev.map((p) => {
         return Array.isArray(p.value) ? ["(", ...p.value, ")"] : [p.value];
       });
-
-      setIsSearchAvailable(() => true);
 
       addToLocalStorage(`@Search ${searchIndex - 1}`, values.flat());
 
@@ -179,6 +179,7 @@ const useKeywordInputs = (
     handleValueChange,
     isAllInputsWithValue,
     saveSearch,
+    isSaved,
   };
 };
 
