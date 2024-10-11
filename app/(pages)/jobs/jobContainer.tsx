@@ -12,11 +12,9 @@ export default function JobContainer() {
   }
   return (
     <ul className="flex flex-col gap-2">
-      {data.jobs.map((searchs) =>
-        searchs.map((job: IFormStateData, i: number) => (
-          <JobCard key={i} job={job} />
-        )),
-      )}
+      {data.jobs.map((job: IFormStateData, i: number) => (
+        <JobCard key={i} job={job} />
+      ))}
     </ul>
   );
 }
