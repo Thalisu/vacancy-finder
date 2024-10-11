@@ -38,16 +38,31 @@ export async function search(
       },
     });
   });
+  const errors: unknown[] = [];
   try {
     const responses = await Promise.all(requests);
     const dataPromises = responses.map((response) => {
       if (!response.ok) {
+        errors.push(response);
         return [];
       }
       return response.json();
     });
-    const jobs = await Promise.all(dataPromises);
-    return { ...state, jobs, loading: false };
+    const jobs = await Promise.all(dataPromises).then((d) =>
+      d
+        .flat()
+        .filter(
+          (item, index, self) =>
+            index === self.findIndex((t) => t.url === item.url),
+        ),
+    );
+
+    return {
+      ...state,
+      jobs,
+      loading: false,
+      errors: errors,
+    };
   } catch (error) {
     throw new AppError("Internal error: " + error, 500);
   }
