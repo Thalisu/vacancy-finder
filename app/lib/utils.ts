@@ -37,3 +37,38 @@ export const updateSessionStorage = (key: string, newValue: any) => {
 export const deleteFromSessionStorage = (key: string) => {
   sessionStorage.removeItem(key);
 };
+
+export const getJobDataTimeValueMeaning = (value: string) => {
+  switch (value) {
+    case "r86400":
+      return "Útimas 24 horas";
+
+    case "r604800":
+      return "Útimos 7 dias";
+
+    case "r2592000":
+      return "Útimos 30 dias";
+
+    default:
+      return value;
+  }
+};
+
+export const getJobDataRemoteValueMeaning = (value: string) => {
+  switch (value) {
+    case "1%2C2%2C3":
+      return "Todas as vagas";
+
+    case "3":
+      return "Somente Híbridas";
+
+    case "2":
+      return "Somente Remotas";
+
+    case "1":
+      return "Somente Presenciais";
+
+    default:
+      return value;
+  }
+};
