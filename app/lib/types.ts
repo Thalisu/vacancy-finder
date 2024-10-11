@@ -21,7 +21,7 @@ export interface IFormStateData {
 
 export interface IFormState {
   length: number;
-  jobs: IFormStateData[][];
+  jobs: IFormStateData[];
   errors: unknown[];
   loading: boolean;
 }
