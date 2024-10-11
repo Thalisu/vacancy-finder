@@ -1,14 +1,18 @@
 import { useLayoutEffect, useRef } from "react";
 import { inter } from "../lib/fonts";
+import { IJobsData } from "../lib/types";
+import SavedJobSearchData from "./SavedJobSearchData";
 
 export default function SavedKeywordField({
   values,
   handler,
   index,
+  jobSearchData,
 }: {
   index: number;
   values: string[];
   handler: (value: string, index: number) => void;
+  jobSearchData: IJobsData;
 }) {
   const inputRef = useRef<HTMLDivElement>(null);
   const isKeyword = values.map((v) => {
@@ -28,25 +32,33 @@ export default function SavedKeywordField({
     });
   });
   return (
-    <div className="flex flex-wrap" ref={inputRef}>
-      {values.map((v, i) => (
-        <div key={i}>
-          <input
-            type="text"
-            readOnly
-            value={v}
-            id="input"
-            name={`keyword-${index}`}
-            className={`${inter.className} ${i === 0 && "rounded-s-md"} ${i === values.length - 1 && "rounded-e-md"} cursor-default bg-gray-800/50 py-1 text-center outline-none transition-colors ${isKeyword[i] && "!cursor-pointer hover:bg-gray-800"}`}
-            onClick={() => {
-              if (isKeyword[i]) {
-                handler(v, i);
-              }
-            }}
-          />
-          <span className="invisible absolute left-0 whitespace-pre">{v}</span>
-        </div>
-      ))}
+    <div className="flex flex-col gap-2">
+      <div
+        className="flex flex-wrap rounded-md bg-gray-950/30 px-2 text-white"
+        ref={inputRef}
+      >
+        {values.map((v, i) => (
+          <div key={i}>
+            <input
+              type="text"
+              readOnly
+              value={v}
+              id="input"
+              name={`keyword-${index}`}
+              className={`${inter.className} cursor-default bg-transparent py-1 text-center outline-none transition-colors ${isKeyword[i] && "!cursor-pointer hover:bg-gray-800"}`}
+              onClick={() => {
+                if (isKeyword[i]) {
+                  handler(v, i);
+                }
+              }}
+            />
+            <span className="invisible absolute left-0 whitespace-pre">
+              {v}
+            </span>
+          </div>
+        ))}
+      </div>
+      <SavedJobSearchData jobSearchData={jobSearchData} index={index} />
     </div>
   );
 }

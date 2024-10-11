@@ -20,7 +20,6 @@ export default function Select({
         id={`${id}-${index}`}
         {...selectConfig}
         className={`max-w-fit rounded-md ${selectConfig.disabled ? "bg-gray-800/50" : "bg-gray-800"} px-2 py-1`}
-        name={`${id}-${index}`}
       >
         {children}
       </select>

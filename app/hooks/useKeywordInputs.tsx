@@ -7,7 +7,7 @@ import {
 } from "react";
 import NewKeywordSearch from "../components/NewKeywordSearch";
 import SelectAndOr from "../components/SelectAndOr";
-import { IKeywordInput } from "../lib/types";
+import { IJobsData, IKeywordInput } from "../lib/types";
 import SavedKeywordField from "../components/SavedKeywordField";
 import {
   addToLocalStorage,
@@ -20,6 +20,12 @@ const useKeywordInputs = (
   searchIndex: number,
 ) => {
   const [keywordInputs, setKeywordInputs] = useState<IKeywordInput[]>([]);
+  const [jobSearchData, setJobSearchData] = useState({
+    time: "r86400",
+    remote: "1%2C2%2C3",
+    location: "Brazil",
+  });
+
   const isAllInputsWithValue = keywordInputs.every((i) => {
     if (i.saved) return false;
     return Array.isArray(i.value) ? i.value.every((v) => v) : i.value;
@@ -68,6 +74,7 @@ const useKeywordInputs = (
                   handler={handleExactSearch}
                   values={value as string[]}
                   index={searchIndex - 1}
+                  jobSearchData={jobSearchData}
                   key={0}
                 />
               );
@@ -139,6 +146,13 @@ const useKeywordInputs = (
     ]);
   };
 
+  const handleSetJobSearchData = (value: Partial<IJobsData>) => {
+    setJobSearchData((prev) => {
+      updateLocalStorage(`@jobData ${searchIndex - 1}`, { ...prev, ...value });
+      return { ...prev, ...value };
+    });
+  };
+
   const removeKeyword = () => {
     setKeywordInputs((prev) => prev.slice(0, -2));
   };
@@ -161,6 +175,7 @@ const useKeywordInputs = (
               <SavedKeywordField
                 handler={handleExactSearch}
                 values={value as string[]}
+                jobSearchData={jobSearchData}
                 index={searchIndex - 1}
                 key={0}
               />
@@ -180,6 +195,8 @@ const useKeywordInputs = (
     isAllInputsWithValue,
     saveSearch,
     isSaved,
+    jobSearchData,
+    handleSetJobSearchData,
   };
 };
 
