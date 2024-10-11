@@ -25,3 +25,9 @@ export interface IFormState {
   errors: unknown[];
   loading: boolean;
 }
+
+export interface IJobsData {
+  time: string;
+  remote: string;
+  location: string;
+}
