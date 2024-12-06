@@ -1,18 +1,18 @@
+"use client";
+import { useState } from "react";
 import { inter } from "../lib/fonts";
 
-export default function SelectAndOr({
-  handleChange,
-  value,
-}: {
-  value: string;
-  handleChange: (newValue: string) => void;
-}) {
+type TValue = "AND" | "OR" | "NOT";
+
+export default function SelectAndOr() {
+  const [value, setValue] = useState<TValue>("AND");
   return (
     <select
+      id="keyword"
       name="andOr"
       className={`${inter.className} h-8 rounded-md bg-gray-800 p-1 text-center`}
       value={value}
-      onChange={({ currentTarget }) => handleChange(currentTarget.value)}
+      onChange={({ currentTarget }) => setValue(currentTarget.value as TValue)}
     >
       <option value="AND" defaultChecked>
         AND
