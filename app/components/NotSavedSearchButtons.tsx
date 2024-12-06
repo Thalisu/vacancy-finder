@@ -1,37 +1,30 @@
 interface props {
-  isAllInputsWithValue: boolean;
-  addKeyword: () => void;
-  isLengthOne: boolean;
-  removeKeyword: () => void;
-  saveSearch: () => void;
+  addExtraFields: () => void;
+  removeExtraField: () => void;
+  handleSave: () => void;
 }
+
 export default function NotSavedSearchButtons(props: props) {
   return (
     <div className="mt-2 flex gap-2">
       <button
         type="button"
         className={`max-w-fit rounded-xl bg-gray-950 p-2`}
-        style={{ opacity: props.isAllInputsWithValue ? "1" : ".5" }}
-        disabled={!props.isAllInputsWithValue}
-        onClick={props.addKeyword}
+        onClick={props.addExtraFields}
       >
         Adicionar
       </button>
       <button
         type="button"
         className={`max-w-fit rounded-xl bg-gray-950 p-2`}
-        style={{ opacity: props.isLengthOne ? ".5" : "1" }}
-        disabled={props.isLengthOne}
-        onClick={props.removeKeyword}
+        onClick={props.removeExtraField}
       >
         Remover
       </button>
       <button
         type="button"
         className={`max-w-fit rounded-xl bg-gray-950 p-2`}
-        style={{ opacity: props.isAllInputsWithValue ? "1" : ".5" }}
-        disabled={!props.isAllInputsWithValue}
-        onClick={() => props.saveSearch()}
+        onClick={props.handleSave}
       >
         Salvar
       </button>
