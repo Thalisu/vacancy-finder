@@ -3,28 +3,14 @@ import { inter } from "../lib/fonts";
 import GroupKeywordField from "./GroupKeywordField";
 import SingularKeywordField from "./SingularKeywordField";
 
-export default function NewKeywordSearch({
-  value,
-  handleValueChange,
-  label,
-}: {
-  value: string | string[];
-  handleValueChange: (newValue: string | string[]) => void;
-  label?: boolean;
-}) {
+export default function NewKeywordSearch({ label }: { label?: boolean }) {
   const [selected, setSelected] = useState("");
 
   if (selected === "group" || selected === "singular") {
     return selected === "group" ? (
-      <GroupKeywordField
-        value={Array.isArray(value) ? value : ["", "AND", ""]}
-        handleValueChange={handleValueChange}
-      />
+      <GroupKeywordField />
     ) : (
-      <SingularKeywordField
-        value={typeof value === "string" ? value : ""}
-        handleValueChange={handleValueChange}
-      />
+      <SingularKeywordField />
     );
   }
 
