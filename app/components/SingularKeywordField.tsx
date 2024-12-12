@@ -1,23 +1,11 @@
 "use client";
 import { inter } from "../lib/fonts";
-import KeywordInput from "./KeywordInput";
+import SelectAndKeyField from "./SelectAndKeyField";
 
-export default function SingularKeywordField({
-  value,
-  handleValueChange,
-}: {
-  value: string;
-  handleValueChange: (
-    newValue: string | string[],
-  ) => void;
-}) {
-
-  const handleChange = (newValue: string) => {
-    handleValueChange(newValue);
-  };
+export default function SingularKeywordField({ label }: { label: boolean }) {
   return (
     <div className={`${inter.className} flex flex-wrap items-center gap-2`}>
-      <KeywordInput value={value} handleChange={handleChange} />
+      <SelectAndKeyField label={label} />
     </div>
   );
 }

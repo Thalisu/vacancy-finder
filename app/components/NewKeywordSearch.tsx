@@ -3,14 +3,18 @@ import { inter } from "../lib/fonts";
 import GroupKeywordField from "./GroupKeywordField";
 import SingularKeywordField from "./SingularKeywordField";
 
-export default function NewKeywordSearch({ label }: { label?: boolean }) {
+export default function NewKeywordSearch({
+  label = false,
+}: {
+  label: boolean;
+}) {
   const [selected, setSelected] = useState("");
 
   if (selected === "group" || selected === "singular") {
     return selected === "group" ? (
       <GroupKeywordField />
     ) : (
-      <SingularKeywordField />
+      <SingularKeywordField label={label} />
     );
   }
 

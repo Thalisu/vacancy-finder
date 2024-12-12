@@ -1,10 +1,10 @@
 import KeywordInput from "./KeywordInput";
 import SelectAndOr from "./SelectAndOr";
 
-export default function ExtraField() {
+export default function ExtraField({ label }: { label: boolean }) {
   return (
     <>
-      <SelectAndOr />
+      {!label && <SelectAndOr />}
       <KeywordInput />
     </>
   );
