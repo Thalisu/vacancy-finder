@@ -1,38 +1,37 @@
-import { ChangeEvent } from "react";
+import { ChangeEvent, useState } from "react";
 import Select from "./Select";
-import { IJobsData } from "../lib/types";
 
-interface props {
-  index: number;
-  jobSearchData: IJobsData;
-  handleSetJobSearchData: (data: Partial<IJobsData>) => void;
-}
+export default function JobDataSelects() {
+  const [jobSearchData, setJobSearchData] = useState({
+    time: "r86400",
+    remote: "1%2C2%2C3",
+    location: "Brazil",
+  });
 
-export default function JobDataSelects(props: props) {
   return (
     <div className="mt-2 flex flex-col gap-2">
       <Select
         id="time"
         label="Período: "
-        index={props.index - 1}
+        index={0}
         selectConfig={{
-          value: props.jobSearchData.time,
+          value: jobSearchData.time,
           onChange: (e: ChangeEvent<HTMLSelectElement>) =>
-            props.handleSetJobSearchData({ time: e.target.value }),
+            setJobSearchData((prev) => ({ ...prev, time: e.target.value })),
         }}
       >
         <option value="r86400">Útimas 24 horas</option>
-        <option value="r604800">Útima semana</option>
-        <option value="r2592000">Útimo mês</option>
+        <option value="r604800">Útimos 7 dias</option>
+        <option value="r2592000">Útimos 30 dias</option>
       </Select>
       <Select
         id="remote"
         label="Remoto: "
-        index={props.index - 1}
+        index={0}
         selectConfig={{
-          value: props.jobSearchData.remote,
+          value: jobSearchData.remote,
           onChange: (e: ChangeEvent<HTMLSelectElement>) =>
-            props.handleSetJobSearchData({ remote: e.target.value }),
+            setJobSearchData((prev) => ({ ...prev, remote: e.target.value })),
         }}
       >
         <option value="1%2C2%2C3">Todas as vagas</option>
@@ -43,12 +42,12 @@ export default function JobDataSelects(props: props) {
       <Select
         id="local"
         label="Local: "
-        index={props.index - 1}
+        index={0}
         selectConfig={{
           disabled: true,
-          value: props.jobSearchData.location,
+          value: jobSearchData.location,
           onChange: (e: ChangeEvent<HTMLSelectElement>) =>
-            props.handleSetJobSearchData({ location: e.target.value }),
+            setJobSearchData((prev) => ({ ...prev, location: e.target.value })),
         }}
       >
         <option value="Brazil">Brasil</option>
