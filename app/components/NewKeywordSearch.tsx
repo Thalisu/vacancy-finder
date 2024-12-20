@@ -2,6 +2,7 @@ import { useState } from "react";
 import { inter } from "../lib/fonts";
 import GroupKeywordField from "./GroupKeywordField";
 import SingularKeywordField from "./SingularKeywordField";
+import SelectAndOr from "./SelectAndOr";
 
 export default function NewKeywordSearch({
   label = false,
@@ -12,7 +13,10 @@ export default function NewKeywordSearch({
 
   if (selected === "group" || selected === "singular") {
     return selected === "group" ? (
-      <GroupKeywordField />
+      <>
+        {!label && <SelectAndOr />}
+        <GroupKeywordField />
+      </>
     ) : (
       <SingularKeywordField label={label} />
     );
