@@ -1,25 +1,22 @@
 import { useLayoutEffect, useRef } from "react";
 import { inter } from "../lib/fonts";
-import { IJobsData } from "../lib/types";
 import SavedJobSearchData from "./SavedJobSearchData";
+import { IJobsData } from "../lib/types";
 
 export default function SavedKeywordField({
-  values,
-  handler,
+  jobsData,
+  keywords,
+  quotationHandler,
   index,
-  jobSearchData,
 }: {
+  jobsData: IJobsData;
+  keywords: string[];
   index: number;
-  values: string[];
-  handler: (value: string, index: number) => void;
-  jobSearchData: IJobsData;
+  quotationHandler: (index: number) => void;
 }) {
+  // adjust the size of inputs to match char length
   const inputRef = useRef<HTMLDivElement>(null);
-  const isKeyword = values.map((v) => {
-    const is =
-      v === "AND" || v === "NOT" || v === "OR" || v === "(" || v === ")";
-    return !is;
-  });
+
   useLayoutEffect(() => {
     if (!inputRef.current) return;
     const childs = Array.from(
@@ -31,24 +28,32 @@ export default function SavedKeywordField({
       input.style.width = `${span.offsetWidth + 4}px`;
     });
   });
+
+  const isKeyword = keywords.map((v) => {
+    const is =
+      v === "AND" || v === "NOT" || v === "OR" || v === "(" || v === ")";
+    return !is;
+  });
+
   return (
     <div className="flex flex-col gap-2">
       <div
         className="flex flex-wrap rounded-md bg-gray-950/30 px-2 text-white"
         ref={inputRef}
       >
-        {values.map((v, i) => (
+        {keywords.map((v, i) => (
           <div key={i}>
             <input
               type="text"
-              readOnly
               value={v}
+              readOnly
+              tabIndex={-1}
               id="input"
               name={`keyword-${index}`}
-              className={`${inter.className} cursor-default bg-transparent py-1 text-center outline-none transition-colors ${isKeyword[i] && "!cursor-pointer hover:bg-gray-800"}`}
+              className={`${inter.className} cursor-default bg-transparent py-1 text-center caret-transparent outline-none transition-colors ${isKeyword[i] && "cursor-pointer hover:bg-gray-800"}`}
               onClick={() => {
                 if (isKeyword[i]) {
-                  handler(v, i);
+                  quotationHandler(i);
                 }
               }}
             />
@@ -58,7 +63,7 @@ export default function SavedKeywordField({
           </div>
         ))}
       </div>
-      <SavedJobSearchData jobSearchData={jobSearchData} index={index} />
+      <SavedJobSearchData jobSearchData={jobsData} index={index} />
     </div>
   );
 }
