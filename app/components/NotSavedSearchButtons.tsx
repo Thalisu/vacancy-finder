@@ -2,6 +2,7 @@ interface props {
   addExtraFields: () => void;
   removeExtraField: () => void;
   handleSave: () => void;
+  noFilledKeywords: { state: boolean; msg: string };
 }
 
 export default function NotSavedSearchButtons(props: props) {
@@ -28,6 +29,11 @@ export default function NotSavedSearchButtons(props: props) {
       >
         Salvar
       </button>
+      {props.noFilledKeywords.state && (
+        <p className="flex items-center text-red-600/90">
+          {props.noFilledKeywords.msg}
+        </p>
+      )}
     </div>
   );
 }
