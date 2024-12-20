@@ -12,7 +12,7 @@ export default function GroupKeywordField() {
   const addExtraField = () => {
     setExtraFields((prev) => [
       ...extraFields,
-      <ExtraField key={prev.length} />,
+      <ExtraField key={prev.length} label={false} />,
     ]);
   };
 
