@@ -60,7 +60,7 @@ export default function KeywordField({ index }: { index: number }) {
       for (let i = 0; i < elementsArray.length; i++) {
         const value = (elementsArray[i] as HTMLInputElement).value;
         if (value !== "") {
-          values.push(value.replace(/[^a-zA-Z"']/g, ""));
+          values.push(value.replace(/[^a-zA-Z")(']/g, ""));
         } else {
           error = true;
           break;
@@ -105,22 +105,26 @@ export default function KeywordField({ index }: { index: number }) {
     });
   }, []);
 
+  const editHandler = () => {};
+
+  const handlers = {
+    quotationHandler,
+    editHandler,
+  };
+
   if (isSaved) {
     return (
       <SavedKeywordField
-        quotationHandler={quotationHandler}
         jobsData={values.jobsData}
         keywords={values.keywords}
         index={index}
+        handlers={handlers}
       />
     );
   }
 
   return (
-    <div className="relative flex min-h-32 flex-col gap-2 bg-gray-950/30 p-4">
-      <p className="absolute -left-1 -top-1 flex h-4 w-4 items-center justify-center rounded-full bg-white text-xs text-black">
-        {index}
-      </p>
+    <div className="bg-secondaryForm relative flex min-h-32 flex-col gap-2 rounded-xl p-4">
       <div className={`mb-auto flex flex-col gap-2`} ref={ref}>
         <div className={`${inter.className} flex flex-wrap items-center gap-2`}>
           <NewKeywordSearch label />

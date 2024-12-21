@@ -12,7 +12,7 @@ export default function SavedJobSearchData({
   index: number;
 }) {
   return (
-    <div className="pointer-events-none flex w-fit cursor-default select-none flex-col gap-1 rounded-md bg-gray-950/30 px-2 py-1">
+    <div className="pointer-events-none flex w-fit cursor-default select-none flex-col gap-1 rounded-md px-2 py-1">
       <div className="relative flex w-fit rounded-md">
         <input
           type="text"

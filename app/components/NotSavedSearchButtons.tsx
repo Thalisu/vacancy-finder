@@ -10,21 +10,21 @@ export default function NotSavedSearchButtons(props: props) {
     <div className="mt-2 flex gap-2">
       <button
         type="button"
-        className={`max-w-fit rounded-xl bg-gray-950 p-2`}
+        className={`bg-complementary max-w-fit rounded-xl p-2`}
         onClick={props.addExtraFields}
       >
         Adicionar
       </button>
       <button
         type="button"
-        className={`max-w-fit rounded-xl bg-gray-950 p-2`}
+        className={`bg-complementary max-w-fit rounded-xl p-2`}
         onClick={props.removeExtraField}
       >
         Remover
       </button>
       <button
         type="button"
-        className={`max-w-fit rounded-xl bg-gray-950 p-2`}
+        className={`bg-complementary max-w-fit rounded-xl p-2`}
         onClick={props.handleSave}
       >
         Salvar

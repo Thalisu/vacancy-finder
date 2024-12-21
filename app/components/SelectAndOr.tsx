@@ -10,7 +10,7 @@ export default function SelectAndOr() {
     <select
       id="keyword"
       name="andOr"
-      className={`${inter.className} h-8 rounded-md bg-gray-800 p-1 text-center`}
+      className={`${inter.className} bg-field h-8 rounded-md p-1 text-center`}
       value={value}
       onChange={({ currentTarget }) => setValue(currentTarget.value as TValue)}
     >

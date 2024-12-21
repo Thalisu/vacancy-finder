@@ -2,31 +2,31 @@
 import useKeywordForm from "@/app/hooks/useKeywordForm";
 
 export default function KeywordForm() {
-  const { action, handleNewSearch, searchs, isSearchAvailable } =
+  const { action, searchs, handleExtraSearch, isSearchAvailable } =
     useKeywordForm();
 
   return (
     <form
-      className="flex w-fit min-w-[50%] max-w-[80%] flex-col gap-2 rounded-md bg-gray-900 p-4"
+      className="bg-primaryForm flex min-h-96 w-fit min-w-[50%] max-w-[80%] flex-col gap-2 rounded-xl p-4"
       action={action}
     >
-      <div className="flex w-full flex-col gap-4">
+      <div className="mb-auto flex w-full flex-col gap-4">
         {searchs.map((search) => search)}
       </div>
       <div className="flex gap-4">
         <button
           type="button"
+          className="bg-accent flex w-fit max-w-fit items-center justify-center gap-2 rounded-xl p-3"
           disabled={!isSearchAvailable}
-          className="flex w-fit max-w-fit items-center justify-center gap-2 rounded-xl bg-gray-950 p-3"
           style={{ opacity: isSearchAvailable ? 1 : 0.5 }}
-          onClick={handleNewSearch}
+          onClick={handleExtraSearch}
         >
           Mais pesquisas
         </button>
         <button
           type="submit"
           disabled={!isSearchAvailable}
-          className={`flex w-fit max-w-fit items-center justify-center gap-2 rounded-xl bg-gray-950 p-3`}
+          className={`bg-accent flex w-fit max-w-fit items-center justify-center gap-2 rounded-xl p-3`}
           style={{ opacity: isSearchAvailable ? 1 : 0.5 }}
         >
           Pesquisar

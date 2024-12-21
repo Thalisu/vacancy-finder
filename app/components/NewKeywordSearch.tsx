@@ -31,7 +31,7 @@ export default function NewKeywordSearch({
         onChange={(e) => {
           setSelected(e.currentTarget.value);
         }}
-        className="max-w-fit rounded-md bg-gray-800 p-2"
+        className="bg-field max-w-fit rounded-md p-2"
       >
         <option defaultChecked>Selecione</option>
         <option value="group">Grupo = (keyword AND/OR keyword)</option>

@@ -15,7 +15,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
-        className={`${inter.className} flex min-h-svh w-svw flex-col bg-gray-950/95 px-2 antialiased`}
+        className={`${inter.className} bg-neutral text-dark flex min-h-svh w-svw flex-col px-2 antialiased`}
       >
         <JobDataProvider>{children}</JobDataProvider>
       </body>
