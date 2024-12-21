@@ -2,17 +2,23 @@ import { useLayoutEffect, useRef } from "react";
 import { inter } from "../lib/fonts";
 import SavedJobSearchData from "./SavedJobSearchData";
 import { IJobsData } from "../lib/types";
+import SavedSearchButtons from "./SavedSearchButtons";
+
+interface IHandlers {
+  quotationHandler: (index: number) => void;
+  editHandler: () => void;
+}
 
 export default function SavedKeywordField({
   jobsData,
   keywords,
-  quotationHandler,
+  handlers,
   index,
 }: {
   jobsData: IJobsData;
   keywords: string[];
   index: number;
-  quotationHandler: (index: number) => void;
+  handlers: IHandlers;
 }) {
   // adjust the size of inputs to match char length
   const inputRef = useRef<HTMLDivElement>(null);
@@ -36,11 +42,14 @@ export default function SavedKeywordField({
   });
 
   return (
-    <div className="flex flex-col gap-2">
-      <div
-        className="flex flex-wrap rounded-md bg-gray-950/30 px-2 text-white"
-        ref={inputRef}
+    <div className="bg-secondaryForm relative flex flex-col gap-2 rounded-md">
+      <p
+        className="bg-secondaryForm absolute -left-2 -top-2 flex h-5 w-5 items-center justify-center rounded-full"
+        style={{ fontSize: "0.715rem" }}
       >
+        {index + 1}
+      </p>
+      <div className="flex flex-wrap px-2" ref={inputRef}>
         {keywords.map((v, i) => (
           <div key={i}>
             <input
@@ -50,10 +59,10 @@ export default function SavedKeywordField({
               tabIndex={-1}
               id="input"
               name={`keyword-${index}`}
-              className={`${inter.className} cursor-default bg-transparent py-1 text-center caret-transparent outline-none transition-colors ${isKeyword[i] && "cursor-pointer hover:bg-gray-800"}`}
+              className={`${inter.className} cursor-default bg-transparent py-1 text-center caret-transparent outline-none transition-colors ${isKeyword[i] && "cursor-pointer hover:bg-gray-800/10"}`}
               onClick={() => {
                 if (isKeyword[i]) {
-                  quotationHandler(i);
+                  handlers.quotationHandler(i);
                 }
               }}
             />
@@ -63,7 +72,13 @@ export default function SavedKeywordField({
           </div>
         ))}
       </div>
-      <SavedJobSearchData jobSearchData={jobsData} index={index} />
+      <div className="flex justify-between gap-2">
+        <SavedJobSearchData jobSearchData={jobsData} index={index} />
+        <SavedSearchButtons
+          keywords={keywords}
+          editSearch={handlers.editHandler}
+        />
+      </div>
     </div>
   );
 }

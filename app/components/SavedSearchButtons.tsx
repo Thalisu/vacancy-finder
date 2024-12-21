@@ -1,28 +1,28 @@
 import { CopySVG, EditSVG } from "./svgs";
 
 export default function SavedSearchButtons({
-  values,
+  keywords,
   editSearch,
 }: {
-  values: string[];
+  keywords: string[];
   editSearch: () => void;
 }) {
   return (
-    <div className="flex gap-1">
+    <div className="flex flex-col items-end justify-end gap-1">
       <button
         type="button"
-        className={`flex h-fit max-w-fit items-center justify-center gap-2 rounded-xl bg-gray-950 p-2`}
-        onClick={editSearch}
-      >
-        Editar <EditSVG className="aspect-square h-4 w-4" />
-      </button>
-      <button
-        type="button"
-        className={`flex h-fit max-w-fit items-center justify-center gap-2 rounded-xl bg-gray-950 p-2`}
-        onClick={() => navigator.clipboard.writeText(values.join(" "))}
+        className={`flex h-fit max-w-fit items-center justify-center gap-2 rounded-xl p-2 text-sm hover:bg-gray-800/10`}
+        onClick={() => navigator.clipboard.writeText(keywords.join(" "))}
       >
         Copiar Keywords
         <CopySVG className="aspect-square h-4 w-4" />
+      </button>
+      <button
+        type="button"
+        className={`flex h-fit max-w-fit items-center justify-center gap-2 rounded-xl p-2 text-sm hover:bg-gray-800/10`}
+        onClick={editSearch}
+      >
+        Editar <EditSVG className="aspect-square h-4 w-4" />
       </button>
     </div>
   );
