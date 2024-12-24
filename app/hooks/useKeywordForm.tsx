@@ -1,12 +1,13 @@
 import { useFormState } from "react-dom";
 import { search } from "@/app/(pages)/(home)/action";
-import { ReactNode, useContext, useEffect, useState } from "react";
+import { ReactNode, useCallback, useContext, useEffect, useState } from "react";
 import KeywordField from "../components/KeywordField";
 import { getAllSearchsFromLocalStorage } from "../lib/utils";
 import jobDataContext from "../context/jobData.context";
 import { redirect } from "next/navigation";
 
 const useKeywordForm = () => {
+  const [errors, setErrors] = useState({ state: false, msg: "" });
   const [isSearchAvailable, setIsSearchAvailable] = useState(false);
   const [searchs, setSearchs] = useState<ReactNode[]>([]);
   const [state, action] = useFormState(search, {
@@ -17,44 +18,34 @@ const useKeywordForm = () => {
   });
   const { handleSetData } = useContext(jobDataContext);
 
+  const handleErrors = useCallback((msg: string, timeout = 5000) => {
+    setTimeout(() => {
+      setErrors(() => ({ state: false, msg: "" }));
+    }, timeout);
+    setErrors(() => ({ state: true, msg }));
+  }, []);
+
   useEffect(() => {
-    const savedKeywords = getAllSearchsFromLocalStorage();
-    let initialValue: ReactNode[] = [];
-    if (savedKeywords.length) {
-      initialValue = savedKeywords.map((keyword, i) => {
-        return (
-          <KeywordField
-            key={i}
-            index={i + 1}
-            setIsSearchAvailable={setIsSearchAvailable}
-          />
-        );
-      });
-    } else {
-      initialValue = [
-        <KeywordField
-          key={0}
-          index={1}
-          setIsSearchAvailable={setIsSearchAvailable}
-        />,
-      ];
-    }
+    /* const savedKeywords = getAllSearchsFromLocalStorage(); */
+    setSearchs(() => [
+      <KeywordField index={0} key={0} handleError={handleErrors} />,
+    ]);
+  }, [state, handleErrors]);
 
-    state.length = initialValue.length;
-
-    setSearchs(() => initialValue);
-  }, [state]);
-
-  const handleNewSearch = () => {
-    setIsSearchAvailable(() => false);
+  const handleExtraSearch = () => {
     setSearchs((prev) => [
       ...prev,
       <KeywordField
         key={prev.length}
-        index={prev.length + 1}
-        setIsSearchAvailable={setIsSearchAvailable}
+        index={prev.length}
+        handleError={handleErrors}
       />,
     ]);
+  };
+
+  const removeSearch = (i: number) => {
+    if (searchs.length <= 1) return;
+    setSearchs((prev) => prev.filter((_, index) => index !== i));
   };
 
   useEffect(() => {
@@ -63,7 +54,7 @@ const useKeywordForm = () => {
     redirect("/jobs");
   }, [state, handleSetData]);
 
-  return { action, handleNewSearch, searchs, isSearchAvailable };
+  return { action, handleExtraSearch, searchs, isSearchAvailable, errors };
 };
 
 export default useKeywordForm;

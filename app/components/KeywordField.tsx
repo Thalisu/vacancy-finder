@@ -12,15 +12,18 @@ import NotSavedSearchButtons from "./NotSavedSearchButtons";
 import SavedKeywordField from "./SavedKeywordField";
 import JobDataSelects from "./JobDataSelects";
 
-export default function KeywordField({ index }: { index: number }) {
+export default function KeywordField({
+  index,
+  handleError,
+}: {
+  index: number;
+  handleError: (msg: string, timeout?: number) => void;
+}) {
   const [isSaved, setIsSaved] = useState(false);
   const [extraFields, setExtraFields] = useState<ReactNode[]>([]);
 
   const jobsData = { time: "", remote: "", location: "" };
   const [values, setValues] = useState({ keywords: [""], jobsData });
-
-  const noFilledKeywords = { state: false, msg: "" };
-  const [errors, setErrors] = useState({ noFilledKeywords });
 
   const ref = useRef<HTMLDivElement>(null);
 
@@ -43,10 +46,7 @@ export default function KeywordField({ index }: { index: number }) {
   const handleSave = useCallback(() => {
     if (!isSaved && ref.current) {
       if (ref.current.querySelector("#search")) {
-        setErrors((prev) => ({
-          ...prev,
-          noFilledKeywords: { state: true, msg: "Escolha o tipo da keyword" },
-        }));
+        handleError("Selecione o tipo da pesquisa");
         return;
       }
 
@@ -68,10 +68,7 @@ export default function KeywordField({ index }: { index: number }) {
       }
 
       if (error) {
-        setErrors((prev) => ({
-          ...prev,
-          noFilledKeywords: { state: true, msg: "Preencha todas as keywords" },
-        }));
+        handleError("Preencha todas as keywords");
         return;
       }
 
@@ -91,7 +88,7 @@ export default function KeywordField({ index }: { index: number }) {
     }
 
     setIsSaved((prev) => !prev);
-  }, [isSaved]);
+  }, [isSaved, handleError]);
 
   const quotationHandler = useCallback((index: number) => {
     setValues((prev) => {
@@ -124,7 +121,7 @@ export default function KeywordField({ index }: { index: number }) {
   }
 
   return (
-    <div className="bg-secondaryForm relative flex min-h-32 flex-col gap-2 rounded-xl p-4">
+    <div className="relative flex min-h-32 flex-col gap-2 rounded-xl bg-secondaryForm p-4">
       <div className={`mb-auto flex flex-col gap-2`} ref={ref}>
         <div className={`${inter.className} flex flex-wrap items-center gap-2`}>
           <NewKeywordSearch label />
@@ -136,7 +133,6 @@ export default function KeywordField({ index }: { index: number }) {
         addExtraFields={addExtraField}
         removeExtraField={removeExtraField}
         handleSave={handleSave}
-        noFilledKeywords={errors.noFilledKeywords}
       />
     </div>
   );
