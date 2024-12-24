@@ -27,10 +27,10 @@ const useKeywordForm = () => {
     setErrors(() => ({ state: true, msg }));
   }, []);
 
-  const markAsSaved = useCallback((i: number) => {
+  const saveHandler = useCallback((i: number, state: boolean) => {
     setSearchs((prev) => {
       const toUpdate = [...prev];
-      toUpdate[i].isSaved = true;
+      toUpdate[i].isSaved = state;
       return [...toUpdate];
     });
   }, []);
@@ -44,13 +44,13 @@ const useKeywordForm = () => {
             index={0}
             key={0}
             handleError={handleErrors}
-            markAsSaved={markAsSaved}
+            saveHandler={saveHandler}
           />
         ),
         isSaved: false,
       },
     ]);
-  }, [state, handleErrors, markAsSaved]);
+  }, [state, handleErrors, saveHandler]);
 
   const handleExtraSearch = useCallback(() => {
     setSearchs((prev) => [
@@ -61,13 +61,13 @@ const useKeywordForm = () => {
             key={prev.length}
             index={prev.length}
             handleError={handleErrors}
-            markAsSaved={markAsSaved}
+            saveHandler={saveHandler}
           />
         ),
         isSaved: false,
       },
     ]);
-  }, [handleErrors, markAsSaved]);
+  }, [handleErrors, saveHandler]);
 
   const removeSearch = (i: number) => {
     if (searchs.length <= 1) return;
