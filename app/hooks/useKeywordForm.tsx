@@ -8,8 +8,10 @@ import { redirect } from "next/navigation";
 
 const useKeywordForm = () => {
   const [errors, setErrors] = useState({ state: false, msg: "" });
-  const [isSearchAvailable, setIsSearchAvailable] = useState(false);
-  const [searchs, setSearchs] = useState<ReactNode[]>([]);
+
+  type SearchField = { field: ReactNode; isSaved: boolean };
+  const [searchs, setSearchs] = useState<SearchField[]>([]);
+
   const [state, action] = useFormState(search, {
     length: searchs.length,
     jobs: [],
@@ -25,23 +27,47 @@ const useKeywordForm = () => {
     setErrors(() => ({ state: true, msg }));
   }, []);
 
+  const markAsSaved = useCallback((i: number) => {
+    setSearchs((prev) => {
+      const toUpdate = [...prev];
+      toUpdate[i].isSaved = true;
+      return [...toUpdate];
+    });
+  }, []);
+
   useEffect(() => {
     /* const savedKeywords = getAllSearchsFromLocalStorage(); */
     setSearchs(() => [
-      <KeywordField index={0} key={0} handleError={handleErrors} />,
+      {
+        field: (
+          <KeywordField
+            index={0}
+            key={0}
+            handleError={handleErrors}
+            markAsSaved={markAsSaved}
+          />
+        ),
+        isSaved: false,
+      },
     ]);
-  }, [state, handleErrors]);
+  }, [state, handleErrors, markAsSaved]);
 
-  const handleExtraSearch = () => {
+  const handleExtraSearch = useCallback(() => {
     setSearchs((prev) => [
       ...prev,
-      <KeywordField
-        key={prev.length}
-        index={prev.length}
-        handleError={handleErrors}
-      />,
+      {
+        field: (
+          <KeywordField
+            key={prev.length}
+            index={prev.length}
+            handleError={handleErrors}
+            markAsSaved={markAsSaved}
+          />
+        ),
+        isSaved: false,
+      },
     ]);
-  };
+  }, [handleErrors, markAsSaved]);
 
   const removeSearch = (i: number) => {
     if (searchs.length <= 1) return;
@@ -54,7 +80,7 @@ const useKeywordForm = () => {
     redirect("/jobs");
   }, [state, handleSetData]);
 
-  return { action, handleExtraSearch, searchs, isSearchAvailable, errors };
+  return { action, handleExtraSearch, searchs, errors };
 };
 
 export default useKeywordForm;

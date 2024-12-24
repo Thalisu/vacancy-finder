@@ -15,9 +15,11 @@ import JobDataSelects from "./JobDataSelects";
 export default function KeywordField({
   index,
   handleError,
+  markAsSaved,
 }: {
   index: number;
   handleError: (msg: string, timeout?: number) => void;
+  markAsSaved: (i: number) => void;
 }) {
   const [isSaved, setIsSaved] = useState(false);
   const [extraFields, setExtraFields] = useState<ReactNode[]>([]);
@@ -84,11 +86,12 @@ export default function KeywordField({
         location: local.value,
       };
 
+      markAsSaved(index);
       setValues({ keywords: values, jobsData });
     }
 
     setIsSaved((prev) => !prev);
-  }, [isSaved, handleError]);
+  }, [isSaved, handleError, markAsSaved, index]);
 
   const quotationHandler = useCallback((index: number) => {
     setValues((prev) => {
