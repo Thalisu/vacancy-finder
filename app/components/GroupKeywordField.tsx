@@ -11,24 +11,27 @@ export default function GroupKeywordField({
 }: {
   values?: string[];
 }) {
-  const dExtraFields = values.splice(3);
-  console.log(dExtraFields);
+  const extraValues = values.splice(3);
+  let dExtraFields: ReactNode[] = [];
+  if (extraValues) {
+    let from = 0,
+      to = from + 2;
 
-  const [extraFields, setExtraFields] = useState<ReactNode[]>(
-    dExtraFields
-      ? new Array(dExtraFields.length / 2).fill(0).map((_, i) => {
-          const from = i === 1 ? i : i + 1;
-          const to = from + 1;
-          return (
-            <ExtraField
-              key={i}
-              label={false}
-              dValue={dExtraFields.slice(from, to)}
-            />
-          );
-        })
-      : [],
-  );
+    dExtraFields = new Array(extraValues.length / 2).fill(0).map((_, i) => {
+      const field = (
+        <ExtraField
+          key={i}
+          label={false}
+          dValue={extraValues.slice(from, to)}
+        />
+      );
+      from = to;
+      to = from + 2;
+      return field;
+    });
+  }
+
+  const [extraFields, setExtraFields] = useState<ReactNode[]>(dExtraFields);
 
   const addExtraField = () => {
     setExtraFields((prev) => [
