@@ -1,4 +1,4 @@
-import { useLayoutEffect, useRef } from "react";
+import { useEffect, useRef } from "react";
 import { inter } from "../lib/fonts";
 import SavedJobSearchData from "./SavedJobSearchData";
 import { IJobsData } from "../lib/types";
@@ -23,7 +23,7 @@ export default function SavedKeywordField({
   // adjust the size of inputs to match char length
   const inputRef = useRef<HTMLDivElement>(null);
 
-  useLayoutEffect(() => {
+  useEffect(() => {
     if (!inputRef.current) return;
     const childs = Array.from(
       inputRef.current.childNodes as NodeListOf<HTMLInputElement>,
@@ -31,9 +31,9 @@ export default function SavedKeywordField({
     childs.map((c) => {
       const input = c.childNodes[0] as HTMLInputElement;
       const span = c.childNodes[1] as HTMLSpanElement;
-      input.style.width = `${span.offsetWidth + 4}px`;
+      input.style.width = `${span.offsetWidth + 2 + input.value.length}px`;
     });
-  });
+  }, [keywords]);
 
   const isKeyword = keywords.map((v) => {
     const is =
@@ -42,9 +42,9 @@ export default function SavedKeywordField({
   });
 
   return (
-    <div className="bg-secondaryForm relative flex flex-col gap-2 rounded-md">
+    <div className="relative flex flex-col gap-2 rounded-md bg-secondaryForm">
       <p
-        className="bg-secondaryForm absolute -left-2 -top-2 flex h-5 w-5 items-center justify-center rounded-full"
+        className="absolute -left-2 -top-2 flex h-5 w-5 items-center justify-center rounded-full bg-secondaryForm"
         style={{ fontSize: "0.715rem" }}
       >
         {index + 1}
@@ -59,14 +59,14 @@ export default function SavedKeywordField({
               tabIndex={-1}
               id="input"
               name={`keyword-${index}`}
-              className={`${inter.className} cursor-default bg-transparent py-1 text-center caret-transparent outline-none transition-colors ${isKeyword[i] && "cursor-pointer hover:bg-gray-800/10"}`}
+              className={`${inter.className} clip cursor-default border-none bg-transparent p-0 py-1 text-center caret-transparent outline-none transition-colors ${isKeyword[i] && "cursor-pointer hover:bg-gray-800/10"} text-base`}
               onClick={() => {
                 if (isKeyword[i]) {
                   handlers.quotationHandler(i);
                 }
               }}
             />
-            <span className="invisible absolute left-0 whitespace-pre">
+            <span className="invisible absolute left-0 top-0 text-base">
               {v}
             </span>
           </div>
