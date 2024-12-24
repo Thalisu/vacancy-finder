@@ -19,7 +19,7 @@ export default function Select({
       <select
         id={`${id}-${index}`}
         {...selectConfig}
-        className={`max-w-fit rounded-md ${selectConfig.disabled ? "bg-field opacity-70" : "bg-field"} px-2 py-1`}
+        className={`max-w-fit rounded-md ${selectConfig.disabled ? "bg-field opacity-70" : "bg-field"} border-2 px-2 py-1`}
       >
         {children}
       </select>
