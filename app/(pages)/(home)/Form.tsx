@@ -2,8 +2,9 @@
 import useKeywordForm from "@/app/hooks/useKeywordForm";
 
 export default function KeywordForm() {
-  const { action, searchs, handleExtraSearch, isSearchAvailable, errors } =
-    useKeywordForm();
+  const { action, searchs, handleExtraSearch, errors } = useKeywordForm();
+
+  const isSearchAvailable = searchs.every((search) => search.isSaved);
 
   return (
     <form
@@ -11,9 +12,17 @@ export default function KeywordForm() {
       action={action}
     >
       <div className="mb-auto flex w-full flex-col gap-4">
-        {searchs.map((search) => search)}
+        {searchs.map((search) => search.field)}
       </div>
       <div className="flex gap-4">
+        <button
+          type="submit"
+          disabled={!isSearchAvailable}
+          className={`flex w-fit max-w-fit items-center justify-center gap-2 rounded-xl bg-accent p-3`}
+          style={{ opacity: isSearchAvailable ? 1 : 0.5 }}
+        >
+          Pesquisar
+        </button>
         <button
           type="button"
           className="flex w-fit max-w-fit items-center justify-center gap-2 rounded-xl bg-accent p-3"
@@ -22,14 +31,6 @@ export default function KeywordForm() {
           onClick={handleExtraSearch}
         >
           Mais pesquisas
-        </button>
-        <button
-          type="submit"
-          disabled={!isSearchAvailable}
-          className={`flex w-fit max-w-fit items-center justify-center gap-2 rounded-xl bg-accent p-3`}
-          style={{ opacity: isSearchAvailable ? 1 : 0.5 }}
-        >
-          Pesquisar
         </button>
         {errors.state && (
           <p className="flex items-center text-error">{errors.msg}</p>
