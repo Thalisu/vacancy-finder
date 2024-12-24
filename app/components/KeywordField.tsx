@@ -12,6 +12,7 @@ import NotSavedSearchButtons from "./NotSavedSearchButtons";
 import SavedKeywordField from "./SavedKeywordField";
 import JobDataSelects from "./JobDataSelects";
 import EditSavedKeyword from "./EditSavedKeyword";
+import { addToLocalStorage } from "../lib/utils";
 
 export default function KeywordField({
   index,
@@ -48,7 +49,7 @@ export default function KeywordField({
   }, [extraFields]);
 
   const handleSave = useCallback(() => {
-    if (situation === "unsaved" && ref.current) {
+    if (situation !== "saved" && ref.current) {
       if (ref.current.querySelector("#search")) {
         handleError("Selecione o tipo da pesquisa");
         return;
@@ -88,12 +89,15 @@ export default function KeywordField({
         location: local.value,
       };
 
+      addToLocalStorage(`@SEARCH${index}`, {
+        keywords: values,
+        jobsData,
+      });
       setExtraFields(() => []);
       saveHandler(index, true);
       setValues({ keywords: values, jobsData });
+      setSituation(() => "saved");
     }
-
-    setSituation(() => "saved");
   }, [situation, handleError, saveHandler, index]);
 
   const quotationHandler = useCallback((index: number) => {
