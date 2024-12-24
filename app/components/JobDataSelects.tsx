@@ -1,12 +1,9 @@
 import { ChangeEvent, useState } from "react";
 import Select from "./Select";
+import { IJobsData } from "../lib/types";
 
-export default function JobDataSelects() {
-  const [jobSearchData, setJobSearchData] = useState({
-    time: "r86400",
-    remote: "1%2C2%2C3",
-    location: "Brazil",
-  });
+export default function JobDataSelects({ jobsData }: { jobsData: IJobsData }) {
+  const [jobSearchData, setJobSearchData] = useState(jobsData);
 
   return (
     <div className="mt-2 flex flex-col gap-2">

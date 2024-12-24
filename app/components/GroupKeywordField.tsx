@@ -6,8 +6,29 @@ import KeywordInput from "./KeywordInput";
 import SelectAndOr from "./SelectAndOr";
 import ExtraField from "./SelectAndKeyField";
 
-export default function GroupKeywordField() {
-  const [extraFields, setExtraFields] = useState<ReactNode[]>([]);
+export default function GroupKeywordField({
+  values = [],
+}: {
+  values?: string[];
+}) {
+  const dExtraFields = values.splice(3);
+  console.log(dExtraFields);
+
+  const [extraFields, setExtraFields] = useState<ReactNode[]>(
+    dExtraFields
+      ? new Array(dExtraFields.length / 2).fill(0).map((_, i) => {
+          const from = i === 1 ? i : i + 1;
+          const to = from + 1;
+          return (
+            <ExtraField
+              key={i}
+              label={false}
+              dValue={dExtraFields.slice(from, to)}
+            />
+          );
+        })
+      : [],
+  );
 
   const addExtraField = () => {
     setExtraFields((prev) => [
@@ -29,9 +50,9 @@ export default function GroupKeywordField() {
         value={"("}
         readOnly
       />
-      <KeywordInput />
-      <SelectAndOr />
-      <KeywordInput />
+      <KeywordInput dValue={values?.[0]} />
+      <SelectAndOr dValue={values?.[1] as "AND" | "OR" | "NOT"} />
+      <KeywordInput dValue={values?.[2]} />
       {extraFields.length > 0 && extraFields.map((ef: ReactNode) => ef)}
       <div className="flex flex-col gap-1">
         <button type="button" onClick={() => addExtraField()}>

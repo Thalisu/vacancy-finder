@@ -11,6 +11,7 @@ import NewKeywordSearch from "./NewKeywordSearch";
 import NotSavedSearchButtons from "./NotSavedSearchButtons";
 import SavedKeywordField from "./SavedKeywordField";
 import JobDataSelects from "./JobDataSelects";
+import EditSavedKeyword from "./EditSavedKeyword";
 
 export default function KeywordField({
   index,
@@ -21,17 +22,18 @@ export default function KeywordField({
   handleError: (msg: string, timeout?: number) => void;
   saveHandler: (i: number, state: boolean) => void;
 }) {
-  const [isSaved, setIsSaved] = useState(false);
+  type Situation = "saved" | "edit" | "unsaved";
+  const [situation, setSituation] = useState<Situation>("unsaved");
   const [extraFields, setExtraFields] = useState<ReactNode[]>([]);
 
-  const jobsData = { time: "", remote: "", location: "" };
+  const jobsData = { time: "r86400", remote: "1%2C2%2C3", location: "Brazil" };
   const [values, setValues] = useState({ keywords: [""], jobsData });
 
   const ref = useRef<HTMLDivElement>(null);
 
   useLayoutEffect(() => {
-    if (!ref.current || !isSaved) return;
-  }, [isSaved]);
+    if (!ref.current || situation !== "saved") return;
+  }, [situation]);
 
   const addExtraField = useCallback(() => {
     setExtraFields((prev) => [
@@ -46,7 +48,7 @@ export default function KeywordField({
   }, [extraFields]);
 
   const handleSave = useCallback(() => {
-    if (!isSaved && ref.current) {
+    if (situation === "unsaved" && ref.current) {
       if (ref.current.querySelector("#search")) {
         handleError("Selecione o tipo da pesquisa");
         return;
@@ -86,12 +88,13 @@ export default function KeywordField({
         location: local.value,
       };
 
+      setExtraFields(() => []);
       saveHandler(index, true);
       setValues({ keywords: values, jobsData });
     }
 
-    setIsSaved((prev) => !prev);
-  }, [isSaved, handleError, saveHandler, index]);
+    setSituation(() => "saved");
+  }, [situation, handleError, saveHandler, index]);
 
   const quotationHandler = useCallback((index: number) => {
     setValues((prev) => {
@@ -105,14 +108,16 @@ export default function KeywordField({
     });
   }, []);
 
-  const editHandler = () => {};
+  const editHandler = () => {
+    setSituation(() => "edit");
+  };
 
   const handlers = {
     quotationHandler,
     editHandler,
   };
 
-  if (isSaved) {
+  if (situation === "saved") {
     return (
       <SavedKeywordField
         jobsData={values.jobsData}
@@ -127,10 +132,14 @@ export default function KeywordField({
     <div className="relative flex min-h-32 flex-col gap-2 rounded-xl bg-secondaryForm p-4">
       <div className={`mb-auto flex flex-col gap-2`} ref={ref}>
         <div className={`${inter.className} flex flex-wrap items-center gap-2`}>
-          <NewKeywordSearch label />
+          {situation === "unsaved" ? (
+            <NewKeywordSearch label />
+          ) : (
+            <EditSavedKeyword values={values.keywords} />
+          )}
           {extraFields.length > 0 && extraFields.map((ef: ReactNode) => ef)}
         </div>
-        <JobDataSelects />
+        <JobDataSelects jobsData={values.jobsData} />
       </div>
       <NotSavedSearchButtons
         addExtraFields={addExtraField}

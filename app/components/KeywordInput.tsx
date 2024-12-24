@@ -2,8 +2,8 @@
 import { useState } from "react";
 import { inter } from "../lib/fonts";
 
-export default function KeywordInput() {
-  const [value, setValue] = useState("");
+export default function KeywordInput({ dValue = "" }: { dValue?: string }) {
+  const [value, setValue] = useState(dValue);
   const resize = (input: EventTarget & HTMLInputElement) => {
     if (input.scrollWidth > input.clientWidth) {
       input.style.width = `${input.scrollWidth}px`;
@@ -22,7 +22,7 @@ export default function KeywordInput() {
         setValue(currentTarget.value);
         resize(currentTarget);
       }}
-      className={`${inter.className} bg-field h-full w-28 rounded-md p-1 text-center`}
+      className={`${inter.className} h-full w-28 rounded-md bg-field p-1 text-center`}
     />
   );
 }
