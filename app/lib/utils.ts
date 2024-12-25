@@ -2,10 +2,11 @@
 export const getAllSearchsFromLocalStorage = () => {
   const searchs = [];
   for (let i = 0; i < 100; i++) {
-    const search = getFromLocalStorage(`@Search ${i}`);
+    const search = getFromLocalStorage(`@SEARCH${i}`);
     if (!search) break;
     searchs.push(search);
   }
+  if (searchs.length === 0) return [0];
   return searchs;
 };
 

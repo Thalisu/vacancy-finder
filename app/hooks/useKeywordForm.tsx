@@ -36,20 +36,36 @@ const useKeywordForm = () => {
   }, []);
 
   useEffect(() => {
-    /* const savedKeywords = getAllSearchsFromLocalStorage(); */
-    setSearchs(() => [
-      {
+    const savedSearchs = getAllSearchsFromLocalStorage();
+    const searchs = savedSearchs.map((search, i) => {
+      if (!search)
+        return {
+          field: (
+            <KeywordField
+              index={0}
+              key={0}
+              handleError={handleErrors}
+              saveHandler={saveHandler}
+            />
+          ),
+          isSaved: false,
+        };
+
+      return {
         field: (
           <KeywordField
-            index={0}
-            key={0}
+            index={i}
+            key={i}
             handleError={handleErrors}
             saveHandler={saveHandler}
+            savedSearch={search}
           />
         ),
-        isSaved: false,
-      },
-    ]);
+        isSaved: true,
+      };
+    });
+
+    setSearchs(() => searchs);
   }, [state, handleErrors, saveHandler]);
 
   const handleExtraSearch = useCallback(() => {

@@ -13,22 +13,30 @@ import SavedKeywordField from "./SavedKeywordField";
 import JobDataSelects from "./JobDataSelects";
 import EditSavedKeyword from "./EditSavedKeyword";
 import { addToLocalStorage } from "../lib/utils";
+import { IJobsData } from "../lib/types";
 
 export default function KeywordField({
   index,
   handleError,
   saveHandler,
+  savedSearch,
 }: {
   index: number;
   handleError: (msg: string, timeout?: number) => void;
   saveHandler: (i: number, state: boolean) => void;
+  savedSearch?: { jobsData: IJobsData; keywords: string[] };
 }) {
   type Situation = "saved" | "edit" | "unsaved";
-  const [situation, setSituation] = useState<Situation>("unsaved");
+  const cSituation = savedSearch ? "saved" : "unsaved";
+  const [situation, setSituation] = useState<Situation>(cSituation);
+
   const [extraFields, setExtraFields] = useState<ReactNode[]>([]);
 
   const jobsData = { time: "r86400", remote: "1%2C2%2C3", location: "Brazil" };
-  const [values, setValues] = useState({ keywords: [""], jobsData });
+  const value = savedSearch
+    ? { keywords: savedSearch.keywords, jobsData: savedSearch.jobsData }
+    : { keywords: [""], jobsData };
+  const [values, setValues] = useState(value);
 
   const ref = useRef<HTMLDivElement>(null);
 
