@@ -24,7 +24,6 @@ export default function KeywordField({
   handlers: {
     handleErrors: (msg: string, timeout?: number) => void;
     saveHandler: (i: number, state: boolean) => void;
-    removeSearch: (i: number) => void;
   };
   savedSearch?: { jobsData: IJobsData; keywords: string[] };
 }) {
@@ -126,12 +125,10 @@ export default function KeywordField({
     setSituation(() => "edit");
   };
 
-  const removeSearch = handlers.removeSearch;
   if (situation === "saved") {
     const handlers = {
       quotationHandler,
       editHandler,
-      removeSearch,
     };
 
     return (

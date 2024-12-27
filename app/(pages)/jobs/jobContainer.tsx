@@ -1,5 +1,5 @@
 "use client";
-import { JobCard } from "@/app/components/JobCard";
+import { JobCard } from "@/app/components/search/keywordComponents/JobCard";
 import jobDataContext from "@/app/context/jobData.context";
 import { IFormStateData } from "@/app/lib/types";
 import { redirect } from "next/navigation";

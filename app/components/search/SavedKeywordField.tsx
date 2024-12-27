@@ -43,12 +43,6 @@ export default function SavedKeywordField({
 
   return (
     <div className="relative flex flex-col gap-2 rounded-md bg-secondaryForm">
-      <p
-        className="absolute -left-2 -top-2 flex h-5 w-5 items-center justify-center rounded-full bg-secondaryForm"
-        style={{ fontSize: "0.715rem" }}
-      >
-        {index + 1}
-      </p>
       <div className="flex flex-wrap px-2" ref={inputRef}>
         {keywords.map((v, i) => (
           <div key={i}>
