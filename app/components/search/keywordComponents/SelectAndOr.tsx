@@ -1,6 +1,5 @@
 "use client";
 import { useState } from "react";
-import { inter } from "../lib/fonts";
 
 type TValue = "AND" | "OR" | "NOT";
 
@@ -10,7 +9,7 @@ export default function SelectAndOr({ dValue = "AND" }: { dValue?: TValue }) {
     <select
       id="keyword"
       name="andOr"
-      className={`${inter.className} h-8 rounded-md bg-field p-1 text-center`}
+      className={`h-8 rounded-md bg-field p-1 text-center`}
       value={value}
       onChange={({ currentTarget }) => setValue(currentTarget.value as TValue)}
     >

@@ -6,24 +6,26 @@ import {
   useRef,
   useState,
 } from "react";
-import { inter } from "../lib/fonts";
+import { inter } from "../../lib/fonts";
 import NewKeywordSearch from "./NewKeywordSearch";
-import NotSavedSearchButtons from "./NotSavedSearchButtons";
+import NotSavedSearchButtons from "./buttons/NotSavedSearchButtons";
 import SavedKeywordField from "./SavedKeywordField";
-import JobDataSelects from "./JobDataSelects";
+import JobDataSelects from "./keywordComponents/JobDataSelects";
 import EditSavedKeyword from "./EditSavedKeyword";
-import { addToLocalStorage } from "../lib/utils";
-import { IJobsData } from "../lib/types";
+import { addToLocalStorage } from "../../lib/utils";
+import { IJobsData } from "../../lib/types";
 
 export default function KeywordField({
   index,
-  handleError,
-  saveHandler,
+  handlers,
   savedSearch,
 }: {
   index: number;
-  handleError: (msg: string, timeout?: number) => void;
-  saveHandler: (i: number, state: boolean) => void;
+  handlers: {
+    handleErrors: (msg: string, timeout?: number) => void;
+    saveHandler: (i: number, state: boolean) => void;
+    removeSearch: (i: number) => void;
+  };
   savedSearch?: { jobsData: IJobsData; keywords: string[] };
 }) {
   type Situation = "saved" | "edit" | "unsaved";
@@ -59,7 +61,7 @@ export default function KeywordField({
   const handleSave = useCallback(() => {
     if (situation !== "saved" && ref.current) {
       if (ref.current.querySelector("#search")) {
-        handleError("Selecione o tipo da pesquisa");
+        handlers.handleErrors("Selecione o tipo da pesquisa");
         return;
       }
 
@@ -81,7 +83,7 @@ export default function KeywordField({
       }
 
       if (error) {
-        handleError("Preencha todas as keywords");
+        handlers.handleErrors("Preencha todas as keywords");
         return;
       }
 
@@ -102,11 +104,11 @@ export default function KeywordField({
         jobsData,
       });
       setExtraFields(() => []);
-      saveHandler(index, true);
+      handlers.saveHandler(index, true);
       setValues({ keywords: values, jobsData });
       setSituation(() => "saved");
     }
-  }, [situation, handleError, saveHandler, index]);
+  }, [situation, handlers, index]);
 
   const quotationHandler = useCallback((index: number) => {
     setValues((prev) => {
@@ -124,12 +126,14 @@ export default function KeywordField({
     setSituation(() => "edit");
   };
 
-  const handlers = {
-    quotationHandler,
-    editHandler,
-  };
-
+  const removeSearch = handlers.removeSearch;
   if (situation === "saved") {
+    const handlers = {
+      quotationHandler,
+      editHandler,
+      removeSearch,
+    };
+
     return (
       <SavedKeywordField
         jobsData={values.jobsData}

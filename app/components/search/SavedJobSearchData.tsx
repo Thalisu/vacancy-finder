@@ -1,8 +1,8 @@
-import { IJobsData } from "../lib/types";
+import { IJobsData } from "@/app/lib/types";
 import {
   getJobDataRemoteValueMeaning,
   getJobDataTimeValueMeaning,
-} from "../lib/utils";
+} from "@/app/lib/utils";
 
 export default function SavedJobSearchData({
   jobSearchData,

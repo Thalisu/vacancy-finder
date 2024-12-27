@@ -1,8 +1,8 @@
 import { useState } from "react";
-import { inter } from "../lib/fonts";
-import GroupKeywordField from "./GroupKeywordField";
-import SingularKeywordField from "./SingularKeywordField";
-import SelectAndOr from "./SelectAndOr";
+import { inter } from "../../lib/fonts";
+import GroupKeywordField from "./searchTypes/GroupKeywordField";
+import SingularKeywordField from "./searchTypes/SingularKeywordField";
+import SelectAndOr from "./keywordComponents/SelectAndOr";
 
 export default function NewKeywordSearch({
   label = false,

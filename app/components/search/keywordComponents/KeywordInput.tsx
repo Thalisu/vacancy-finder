@@ -1,6 +1,5 @@
 "use client";
 import { useState } from "react";
-import { inter } from "../lib/fonts";
 
 export default function KeywordInput({ dValue = "" }: { dValue?: string }) {
   const [value, setValue] = useState(dValue);
@@ -22,7 +21,7 @@ export default function KeywordInput({ dValue = "" }: { dValue?: string }) {
         setValue(currentTarget.value);
         resize(currentTarget);
       }}
-      className={`${inter.className} h-full w-28 rounded-md bg-field p-1 text-center`}
+      className={`h-full w-28 rounded-md bg-field p-1 text-center`}
     />
   );
 }

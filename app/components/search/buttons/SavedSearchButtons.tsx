@@ -1,4 +1,4 @@
-import { CopySVG, EditSVG } from "./svgs";
+import { CopySVG, EditSVG } from "../../svgs";
 
 export default function SavedSearchButtons({
   keywords,

@@ -1,6 +1,6 @@
 import { ChangeEvent, useState } from "react";
 import Select from "./Select";
-import { IJobsData } from "../lib/types";
+import { IJobsData } from "../../../lib/types";
 
 export default function JobDataSelects({ jobsData }: { jobsData: IJobsData }) {
   const [jobSearchData, setJobSearchData] = useState(jobsData);

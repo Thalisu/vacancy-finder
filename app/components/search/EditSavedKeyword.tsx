@@ -1,6 +1,6 @@
-import GroupKeywordField from "./GroupKeywordField";
-import KeywordInput from "./KeywordInput";
-import SelectAndOr from "./SelectAndOr";
+import GroupKeywordField from "./searchTypes/GroupKeywordField";
+import KeywordInput from "./keywordComponents/KeywordInput";
+import SelectAndOr from "./keywordComponents/SelectAndOr";
 
 export default function EditSavedKeyword({ values }: { values: string[] }) {
   let isGroup = false;

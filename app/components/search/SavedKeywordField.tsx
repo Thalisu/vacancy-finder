@@ -1,8 +1,8 @@
 import { useEffect, useRef } from "react";
-import { inter } from "../lib/fonts";
+import { inter } from "../../lib/fonts";
+import { IJobsData } from "../../lib/types";
 import SavedJobSearchData from "./SavedJobSearchData";
-import { IJobsData } from "../lib/types";
-import SavedSearchButtons from "./SavedSearchButtons";
+import SavedSearchButtons from "./buttons/SavedSearchButtons";
 
 interface IHandlers {
   quotationHandler: (index: number) => void;

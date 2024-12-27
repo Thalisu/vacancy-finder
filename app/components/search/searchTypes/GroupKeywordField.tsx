@@ -1,10 +1,10 @@
 "use client";
 import React, { ReactNode, useState } from "react";
-import { MinusSVG, PlusSVG } from "./svgs";
-import { inter } from "../lib/fonts";
-import KeywordInput from "./KeywordInput";
-import SelectAndOr from "./SelectAndOr";
-import ExtraField from "./SelectAndKeyField";
+import ExtraField from "../keywordComponents/SelectAndKeyField";
+import KeywordInput from "../keywordComponents/KeywordInput";
+import SelectAndOr from "../keywordComponents/SelectAndOr";
+import { MinusSVG, PlusSVG } from "../../svgs";
+
 
 export default function GroupKeywordField({
   values = [],
@@ -46,7 +46,7 @@ export default function GroupKeywordField({
   };
 
   return (
-    <div className={`${inter.className} flex flex-wrap items-center gap-2`}>
+    <div className={` flex flex-wrap items-center gap-2`}>
       <input
         id="keyword"
         className="pointer-events-none w-2 cursor-default bg-transparent text-3xl text-blue-900/70"

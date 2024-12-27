@@ -1,5 +1,5 @@
 import Image from "next/image";
-import { IFormStateData } from "../lib/types";
+import { IFormStateData } from "../../../lib/types";
 
 export function JobCard({ job }: { job: IFormStateData }) {
   return (
