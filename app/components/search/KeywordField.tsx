@@ -1,19 +1,12 @@
 "use client";
-import {
-  ReactNode,
-  useCallback,
-  useLayoutEffect,
-  useRef,
-  useState,
-} from "react";
 import { inter } from "../../lib/fonts";
 import NewKeywordSearch from "./NewKeywordSearch";
 import NotSavedSearchButtons from "./buttons/NotSavedSearchButtons";
 import SavedKeywordField from "./SavedKeywordField";
 import JobDataSelects from "./keywordComponents/JobDataSelects";
 import EditSavedKeyword from "./EditSavedKeyword";
-import { addToLocalStorage, updateLocalStorage } from "../../lib/utils";
 import { IJobsData } from "../../lib/types";
+import useKeywordFields from "@/app/hooks/useKeywordFields";
 
 export default function KeywordField({
   searchIndex,
@@ -27,124 +20,16 @@ export default function KeywordField({
   };
   savedSearch?: { jobsData: IJobsData; keywords: string[] };
 }) {
-  type Situation = "saved" | "edit" | "unsaved";
-  console.log(searchIndex);
-  const cSituation = savedSearch ? "saved" : "unsaved";
-  const [situation, setSituation] = useState<Situation>(cSituation);
-
-  const [extraFields, setExtraFields] = useState<ReactNode[]>([]);
-
-  const jobsData = { time: "r86400", remote: "1%2C2%2C3", location: "Brazil" };
-  const value = savedSearch
-    ? { keywords: savedSearch.keywords, jobsData: savedSearch.jobsData }
-    : { keywords: [""], jobsData };
-  const [values, setValues] = useState(value);
-
-  const ref = useRef<HTMLDivElement>(null);
-
-  useLayoutEffect(() => {
-    if (!ref.current || situation !== "saved") return;
-  }, [situation]);
-
-  const addExtraField = useCallback(() => {
-    setExtraFields((prev) => [
-      ...prev,
-      <NewKeywordSearch key={prev.length} label={false} />,
-    ]);
-  }, []);
-
-  const removeExtraField = useCallback(() => {
-    if (extraFields.length < 1) return;
-    setExtraFields(() => extraFields.slice(0, extraFields.length - 1));
-  }, [extraFields]);
-
-  const handleSave = useCallback(() => {
-    if (situation !== "saved" && ref.current) {
-      if (ref.current.querySelector("#search")) {
-        handlers.handleErrors("Selecione o tipo da pesquisa");
-        return;
-      }
-
-      const elementsArray = Array.from(
-        ref.current.querySelectorAll("#keyword") || [],
-      );
-
-      const values: string[] = [];
-      let error = false;
-
-      for (let i = 0; i < elementsArray.length; i++) {
-        const value = (elementsArray[i] as HTMLInputElement).value;
-        if (value !== "") {
-          values.push(value.replace(/[^a-zA-Z")(']/g, ""));
-        } else {
-          error = true;
-          break;
-        }
-      }
-
-      if (error) {
-        handlers.handleErrors("Preencha todas as keywords");
-        return;
-      }
-
-      const time = ref.current.querySelector("#time-0") as HTMLSelectElement;
-      const remote = ref.current.querySelector(
-        "#remote-0",
-      ) as HTMLSelectElement;
-      const local = ref.current.querySelector("#local-0") as HTMLSelectElement;
-
-      const jobsData = {
-        time: time.value,
-        remote: remote.value,
-        location: local.value,
-      };
-
-      addToLocalStorage(`@SEARCH${searchIndex}`, {
-        keywords: values,
-        jobsData,
-      });
-      setExtraFields(() => []);
-      handlers.saveHandler(searchIndex, true);
-      setValues({ keywords: values, jobsData });
-      setSituation(() => "saved");
-    }
-  }, [situation, handlers, searchIndex]);
-
-  const quotationHandler = useCallback(
-    (index: number) => {
-      setValues((prev) => {
-        const newValues = prev.keywords.map((v, i) => {
-          if (i === index) {
-            return v.includes('"') ? v.replaceAll('"', "") : `\"${v}\"`;
-          }
-          return v;
-        });
-        updateLocalStorage(`@SEARCH${searchIndex}`, {
-          ...prev,
-          keywords: newValues,
-        });
-        return { ...prev, keywords: newValues };
-      });
-    },
-    [searchIndex],
-  );
-
-  const editHandler = () => {
-    setSituation(() => "edit");
-  };
+  const { ref, situation, extraFields, values, fieldHandlers } =
+    useKeywordFields(handlers, searchIndex, savedSearch);
 
   if (situation === "saved") {
-    const handlers = {
-      quotationHandler,
-      editHandler,
-    };
-
     return (
       <SavedKeywordField
         jobsData={values.jobsData}
         keywords={values.keywords}
         index={searchIndex}
-        handlers={handlers}
+        handlers={fieldHandlers}
       />
     );
   }
@@ -158,14 +43,15 @@ export default function KeywordField({
           ) : (
             <EditSavedKeyword values={values.keywords} />
           )}
-          {extraFields.length > 0 && extraFields.map((ef: ReactNode) => ef)}
+          {extraFields.length > 0 &&
+            extraFields.map((ef: React.ReactNode) => ef)}
         </div>
         <JobDataSelects jobsData={values.jobsData} />
       </div>
       <NotSavedSearchButtons
-        addExtraFields={addExtraField}
-        removeExtraField={removeExtraField}
-        handleSave={handleSave}
+        addExtraFields={fieldHandlers.addExtraField}
+        removeExtraField={fieldHandlers.removeExtraField}
+        handleSave={fieldHandlers.handleSave}
       />
     </div>
   );
