@@ -9,6 +9,8 @@ export default function KeywordInput({ dValue = "" }: { dValue?: string }) {
     }
   };
 
+  const allowedCharsRegex = /^[a-zA-Z'"-]*$/;
+
   return (
     <input
       id="keyword"
@@ -18,8 +20,10 @@ export default function KeywordInput({ dValue = "" }: { dValue?: string }) {
       value={value}
       placeholder="keyword"
       onChange={({ currentTarget }) => {
-        setValue(currentTarget.value);
-        resize(currentTarget);
+        if (allowedCharsRegex.test(currentTarget.value)) {
+          setValue(currentTarget.value);
+          resize(currentTarget);
+        }
       }}
       className={`h-full w-28 rounded-md bg-field p-1 text-center`}
     />
