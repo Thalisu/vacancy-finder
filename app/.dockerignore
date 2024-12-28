@@ -1,11 +1,15 @@
-/node_modules
+Dockerfile
+.dockerignore
+node_modules
+README.md
+.next
+.git
 /dependencies
 /.pnp
 .pnp.js
 .yarn/install-state.gz
 /VacancyScrapper
 /coverage
-/.next/
 /out/
 /build
 .DS_Store
@@ -17,4 +21,3 @@ yarn-error.log*
 .vercel
 *.tsbuildinfo
 next-env.d.ts
-
