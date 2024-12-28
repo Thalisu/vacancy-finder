@@ -6,6 +6,12 @@ export interface IKeywordInput {
   saved?: boolean;
 }
 
+export type TSearchField = {
+  index: number;
+  field: React.ReactNode;
+  isSaved: boolean;
+};
+
 export type TKeywordField = IKeywordInput[];
 
 export interface IFormStateErrors {
