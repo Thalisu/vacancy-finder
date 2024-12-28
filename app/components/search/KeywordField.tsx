@@ -12,15 +12,15 @@ import NotSavedSearchButtons from "./buttons/NotSavedSearchButtons";
 import SavedKeywordField from "./SavedKeywordField";
 import JobDataSelects from "./keywordComponents/JobDataSelects";
 import EditSavedKeyword from "./EditSavedKeyword";
-import { addToLocalStorage } from "../../lib/utils";
+import { addToLocalStorage, updateLocalStorage } from "../../lib/utils";
 import { IJobsData } from "../../lib/types";
 
 export default function KeywordField({
-  index,
+  searchIndex,
   handlers,
   savedSearch,
 }: {
-  index: number;
+  searchIndex: number;
   handlers: {
     handleErrors: (msg: string, timeout?: number) => void;
     saveHandler: (i: number, state: boolean) => void;
@@ -28,6 +28,7 @@ export default function KeywordField({
   savedSearch?: { jobsData: IJobsData; keywords: string[] };
 }) {
   type Situation = "saved" | "edit" | "unsaved";
+  console.log(searchIndex);
   const cSituation = savedSearch ? "saved" : "unsaved";
   const [situation, setSituation] = useState<Situation>(cSituation);
 
@@ -98,28 +99,35 @@ export default function KeywordField({
         location: local.value,
       };
 
-      addToLocalStorage(`@SEARCH${index}`, {
+      addToLocalStorage(`@SEARCH${searchIndex}`, {
         keywords: values,
         jobsData,
       });
       setExtraFields(() => []);
-      handlers.saveHandler(index, true);
+      handlers.saveHandler(searchIndex, true);
       setValues({ keywords: values, jobsData });
       setSituation(() => "saved");
     }
-  }, [situation, handlers, index]);
+  }, [situation, handlers, searchIndex]);
 
-  const quotationHandler = useCallback((index: number) => {
-    setValues((prev) => {
-      const newValues = prev.keywords.map((v, i) => {
-        if (i === index) {
-          return v.includes('"') ? v.replaceAll('"', "") : `\"${v}\"`;
-        }
-        return v;
+  const quotationHandler = useCallback(
+    (index: number) => {
+      setValues((prev) => {
+        const newValues = prev.keywords.map((v, i) => {
+          if (i === index) {
+            return v.includes('"') ? v.replaceAll('"', "") : `\"${v}\"`;
+          }
+          return v;
+        });
+        updateLocalStorage(`@SEARCH${searchIndex}`, {
+          ...prev,
+          keywords: newValues,
+        });
+        return { ...prev, keywords: newValues };
       });
-      return { ...prev, keywords: newValues };
-    });
-  }, []);
+    },
+    [searchIndex],
+  );
 
   const editHandler = () => {
     setSituation(() => "edit");
@@ -135,7 +143,7 @@ export default function KeywordField({
       <SavedKeywordField
         jobsData={values.jobsData}
         keywords={values.keywords}
-        index={index}
+        index={searchIndex}
         handlers={handlers}
       />
     );

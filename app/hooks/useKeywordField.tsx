@@ -43,7 +43,7 @@ const useKeywordField = () => {
               key={key || this.index}
             >
               <KeywordField
-                index={this.index}
+                searchIndex={this.index}
                 handlers={{ handleErrors, saveHandler }}
                 savedSearch={search}
               />
