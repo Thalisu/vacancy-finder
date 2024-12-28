@@ -7,7 +7,7 @@ import {
 } from "../lib/utils";
 import { TSearchField } from "../lib/types";
 
-const useKeywordField = () => {
+const useSearchFields = () => {
   const [searchs, setSearchs] = useState<TSearchField[]>([]);
   const [errors, setErrors] = useState({ state: false, msg: "" });
 
@@ -109,4 +109,4 @@ const useKeywordField = () => {
   };
 };
 
-export default useKeywordField;
+export default useSearchFields;
