@@ -1,3 +1,18 @@
+x-backend_default: &backend
+  image: vacancy-backend
+  build:
+    context: ./backend
+  networks:
+    - app-network
+  env_file:
+    - "./backend/.env"
+  environment:
+    ENV_MODE: "prod"
+    REDIS_HOST: "redis"
+    REDIS_PORT: "6379"
+  depends_on:
+    - redis
+
 services:
   frontend:
     image: vacancy-frontend
@@ -9,17 +24,25 @@ services:
       - app-network
 
   backend:
-    image: vacancy-backend
-    build:
-      context: ./backend
+    <<: *backend
+    container_name: backend
     expose:
       - 8000
-    networks:
-      - app-network
-    env_file:
-      - "./backend/.env"
-    environment:
-      ENV_MODE: "prod"
+    command: ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8000"]
+
+  worker:
+    <<: *backend
+    container_name: worker
+    restart: always
+
+  redis:
+    image: redis
+    container_name: redis
+    restart: always
+    expose:
+      - 6379
+    volumes:
+      - ./backend/src/redis/redis_data:/data
 
   nginx:
     image: nginx
