@@ -27,6 +27,11 @@ export const deleteFromLocalStorage = (key: string) => {
   localStorage.removeItem(key);
 };
 
+export const getFromSessionStorage = (key: string) => {
+  const value = sessionStorage.getItem(key);
+  return value && JSON.parse(value);
+};
+
 export const addToSessionStorage = (key: string, value: any) => {
   sessionStorage.setItem(key, JSON.stringify(value));
 };
