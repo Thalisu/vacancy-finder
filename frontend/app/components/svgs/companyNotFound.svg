@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg"  viewBox="0 0 100 100" fill="none">
+  <!-- Background Rectangle -->
+  <rect width="100" height="100" fill="#F0F0F0"/>
+  <!-- Base Shapes Representing Buildings -->
+  <rect x="20" y="40" width="20" height="40" fill="#6C8DA5"/>
+  <rect x="50" y="30" width="25" height="50" fill="#A9C1D9"/>
+</svg>
