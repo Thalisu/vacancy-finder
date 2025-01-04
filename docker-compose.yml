@@ -20,6 +20,8 @@ services:
       context: ./frontend
     expose:
       - 3000
+    environment:
+      - NEXT_PUBLIC_BACKEND_URL=backend:8000
     networks:
       - app-network
 
