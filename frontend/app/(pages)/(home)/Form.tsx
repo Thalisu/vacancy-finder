@@ -4,13 +4,13 @@ import useFormAction from "@/app/hooks/useKeywordForm";
 
 export default function KeywordForm() {
   const { searchs, errors, handleExtraSearch } = useSearchFields();
-  const { action } = useFormAction(searchs);
+  const { action } = useFormAction();
 
   const isSearchAvailable = searchs.every((search) => search.isSaved);
 
   return (
     <form
-      className="flex min-h-96 w-fit min-w-[50%] max-w-[80%] flex-col gap-2 rounded-xl bg-primaryForm p-4"
+      className="flex min-h-96 w-full min-w-[50%] max-w-screen-xl flex-col gap-2 rounded-xl bg-primaryForm p-4"
       action={action}
     >
       <div className="mb-auto flex w-full flex-col gap-4">

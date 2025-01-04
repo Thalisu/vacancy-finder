@@ -1,67 +1,49 @@
 "use server";
-import { headers } from "next/headers";
-import { IFormState } from "@/app/lib/types";
+import { IFormState, IJobConfig } from "@/app/lib/types";
 import AppError from "@/app/errors/appError";
+import { backendUrl } from "@/app/lib/config";
 
 export async function search(
   state: IFormState,
   formData: FormData,
 ): Promise<IFormState> {
-  const currentSearchsLength = new Array(state.length).fill(0);
-  const searchs = currentSearchsLength.map((x, i) => {
+  const jobRequest: IJobConfig[] = [];
+  let i = 0;
+  while (true) {
     const keywords = formData
       .getAll(`keyword-${i}`)
       .join(" ")
       .replace(/\s\(\s/g, " (")
       .replace(/\s\)\s/g, ") ");
+    if (keywords === "") {
+      break;
+    }
 
-    const timeframe = formData.get(`time-${i}`);
-    const remote = formData.get(`remote-${i}`);
+    const timeframe = formData.get(`time-${i}`) as string;
+    const remote = formData.get(`remote-${i}`) as string;
     const local = "Brazil";
-    return { keywords, timeframe, remote, local };
-  });
-
-  const baseUrl = headers().get("x-url");
-  if (!baseUrl) {
-    throw new AppError("BaseUrl not found", 500);
+    i++;
+    jobRequest.push({ keywords, timeframe, remote, local });
   }
 
-  const requests = searchs.map((search) => {
-    const url = new URL(
-      `/api/linkedin?keywords=${search.keywords}&timeframe=${search.timeframe}&remote=${search.remote}&location=${search.local}`,
-      baseUrl,
-    );
-    return fetch(url, {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-      },
-    });
+  const url = new URL(`/linkedin/`, `http://${backendUrl}`);
+
+  const response = await fetch(url, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(jobRequest),
   });
-  const errors: unknown[] = [];
+
   try {
-    const responses = await Promise.all(requests);
-    const dataPromises = responses.map((response) => {
-      if (!response.ok) {
-        errors.push(response);
-        return [];
-      }
-      return response.json();
-    });
-    const jobs = await Promise.all(dataPromises).then((d) =>
-      d
-        .flat()
-        .filter(
-          (item, index, self) =>
-            index === self.findIndex((t) => t.url === item.url),
-        ),
-    );
+    const task_id = await response.json();
+    const data = { ...task_id, search: jobRequest };
 
     return {
       ...state,
-      jobs,
-      loading: false,
-      errors: errors,
+      data,
+      id_ready: true,
     };
   } catch (error) {
     throw new AppError("Internal error: " + error, 500);

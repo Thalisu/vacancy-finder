@@ -1,24 +1,20 @@
 import { useFormState } from "react-dom";
 import { search } from "@/app/(pages)/(home)/action";
-import { useContext, useEffect } from "react";
-import jobDataContext from "../context/jobData.context";
+import { useEffect } from "react";
 import { redirect } from "next/navigation";
-import { TSearchField } from "../lib/types";
+import { addToSessionStorage } from "../lib/utils";
 
-const useFormAction = (searchs: TSearchField[]) => {
+const useFormAction = () => {
   const [state, action] = useFormState(search, {
-    length: searchs.length,
-    jobs: [],
-    errors: [],
-    loading: true,
+    id_ready: false,
+    data: null,
   });
-  const { handleSetData } = useContext(jobDataContext);
 
   useEffect(() => {
-    if (state.loading) return;
-    handleSetData(state);
+    if (!state.id_ready) return;
+    addToSessionStorage("@CURRENT_SEARCH", state.data);
     redirect("/jobs");
-  }, [state, handleSetData]);
+  }, [state]);
 
   return { action };
 };
