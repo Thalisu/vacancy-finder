@@ -1,5 +1,5 @@
 import { useCallback, useRef, useState } from "react";
-import { IJobResponse } from "../lib/types";
+import { IJobsData } from "../lib/types";
 import NewKeywordSearch from "../components/search/NewKeywordSearch";
 import { addToLocalStorage, updateLocalStorage } from "../lib/utils";
 
@@ -10,7 +10,7 @@ const useKeywordFields = (
   },
   searchIndex: number,
   savedSearch?: {
-    jobsData: IJobResponse;
+    jobsData: IJobsData;
     keywords: string[];
   },
 ) => {
