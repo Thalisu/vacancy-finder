@@ -1,16 +1,16 @@
 import { useCallback, useEffect, useState } from "react";
 import {
-  IGetJobResponse,
   IJob,
   IJobConfig,
   IJobResponse,
   ILinkedinTaskData,
   IResponseError,
+  ITask,
 } from "../lib/types";
 import { useRouter } from "next/navigation";
 import { uniqBy } from "lodash";
 import { getFromSessionStorage } from "../lib/utils";
-import { backendUrl } from "../lib/config";
+import startWebSocket from "../lib/startWebsocket";
 
 interface IResponse {
   config: IJobConfig[];
@@ -118,30 +118,24 @@ const useJobs = () => {
       router.push("/");
     }
 
-    const socket = new WebSocket(
-      `ws://${backendUrl}/linkedin/ws/${data.task_id}`,
-    );
+    const config = data.search;
+    const task_id = data.task_id;
 
-    socket.onmessage = (event) => {
-      const eventData: IGetJobResponse = JSON.parse(event.data);
-      if ("status" in eventData) {
-        router.push("/");
-      }
-      if (eventData.task_result) {
-        updatePercentage(74, 100);
-        const response = {
-          config: data.search,
-          task_id: data.task_id,
-          searchs: eventData.task_result.response || [],
-          error: eventData.task_result.error,
-        };
-        updateJobs(
-          response.searchs.map((search) => search.keywords),
-          response.searchs,
-        );
-        setTask(() => response);
-      }
-    };
+    (async () => {
+      const webSocketResponse: ITask = await startWebSocket(data.task_id);
+      const response = {
+        config,
+        task_id,
+        searchs: webSocketResponse.response || [],
+        error: webSocketResponse.error,
+      };
+
+      updateJobs(
+        response.searchs.map((search) => search.keywords),
+        response.searchs,
+      );
+      setTask(() => response);
+    })();
   }, [updateJobs, updatePercentage, router]);
 
   return {
