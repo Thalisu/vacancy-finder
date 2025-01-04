@@ -6,3 +6,4 @@ export { default as CopySVG } from "@/app/components/svgs/copy.svg";
 export { default as TrashSVG } from "@/app/components/svgs/trash.svg";
 export { default as CompanyNotFound } from "@/app/components/svgs/companyNotFound.svg";
 export { default as Filter } from "@/app/components/svgs/filter.svg";
+export { default as Close } from "@/app/components/svgs/close.svg";
