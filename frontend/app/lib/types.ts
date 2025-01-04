@@ -6,6 +6,12 @@ export interface IKeywordInput {
   saved?: boolean;
 }
 
+export interface IJobsData {
+  time: string;
+  remote: string;
+  location: string;
+}
+
 export type TSearchField = {
   index: number;
   field: React.ReactNode;
