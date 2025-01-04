@@ -13,6 +13,17 @@ export default defineNextConfig({
     ],
   },
   output: "standalone",
+  experimental: {
+    serverActions: {
+      allowedOrigins: [
+        "http://localhost:3000",
+        "http://0.0.0.0:3000",
+        "http://frontend:3000",
+        "frontend:3000",
+      ],
+    },
+  },
+
   webpack(config) {
     config.module.rules.push({
       test: /\.svg$/,
