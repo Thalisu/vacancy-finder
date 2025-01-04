@@ -28,6 +28,8 @@ export interface IJob {
   url: string;
   enterprise: string;
   img: string;
+  state: string;
+  location: string;
 }
 
 export interface IJobResponse {
