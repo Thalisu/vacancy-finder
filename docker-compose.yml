@@ -1,7 +1,4 @@
 x-backend_default: &backend
-  image: vacancy-backend
-  build:
-    context: ./backend
   networks:
     - app-network
   env_file:
@@ -21,12 +18,16 @@ services:
     expose:
       - 3000
     environment:
-      - NEXT_PUBLIC_BACKEND_URL=backend:8000
+      BACKEND_URL: backend:8000
     networks:
       - app-network
 
   backend:
     <<: *backend
+    image: vacancy-backend
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
     container_name: backend
     expose:
       - 8000
@@ -34,7 +35,12 @@ services:
 
   worker:
     <<: *backend
+    image: vacancy-backend-worker
+    build:
+      context: ./backend
+      dockerfile: worker.Dockerfile
     container_name: worker
+    command: ["python3", "-m", "src.redis.worker"]
     restart: always
 
   redis:
@@ -45,6 +51,8 @@ services:
       - 6379
     volumes:
       - ./backend/src/redis/redis_data:/data
+    networks:
+      - app-network
 
   nginx:
     image: nginx
