@@ -18,22 +18,47 @@ export interface IFormStateErrors {
   errors: unknown[];
 }
 
-export interface IFormStateData {
+export type IResponseError = {
+  status_code: number;
+  message: string;
+} | null;
+
+export interface IJob {
   title: string;
   url: string;
   enterprise: string;
   img: string;
 }
 
-export interface IFormState {
-  length: number;
-  jobs: IFormStateData[];
-  errors: unknown[];
-  loading: boolean;
+export interface IJobResponse {
+  keywords: string;
+  error: IResponseError;
+  jobs: IJob[];
 }
 
-export interface IJobsData {
-  time: string;
+export interface ITask {
+  response: IJobResponse[] | null;
+  error: IResponseError;
+}
+
+export interface IGetJobResponse {
+  task_result: ITask;
+  task_status: string;
+}
+
+export interface IJobConfig {
+  keywords: string;
+  timeframe: string;
   remote: string;
-  location: string;
+  local: string;
+}
+
+export interface ILinkedinTaskData {
+  task_id: string;
+  search: IJobConfig[];
+}
+
+export interface IFormState {
+  data: ILinkedinTaskData | null;
+  id_ready: boolean;
 }
