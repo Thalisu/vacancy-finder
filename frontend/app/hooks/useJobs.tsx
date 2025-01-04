@@ -109,7 +109,7 @@ const useJobs = () => {
       return;
     }
     const duration = 10000 + (data.search.length - 1) * 10000;
-    updatePercentage(0, 100, duration);
+    updatePercentage(0, 95, duration);
   }, [updatePercentage]);
 
   useEffect(() => {
@@ -129,12 +129,14 @@ const useJobs = () => {
         searchs: webSocketResponse.response || [],
         error: webSocketResponse.error,
       };
-
-      updateJobs(
-        response.searchs.map((search) => search.keywords),
-        response.searchs,
-      );
-      setTask(() => response);
+      updatePercentage(95, 100, 250);
+      setTimeout(() => {
+        updateJobs(
+          response.searchs.map((search) => search.keywords),
+          response.searchs,
+        );
+        setTask(() => response);
+      }, 250);
     })();
   }, [updateJobs, updatePercentage, router]);
 
