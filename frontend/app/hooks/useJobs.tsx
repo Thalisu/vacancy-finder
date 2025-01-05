@@ -122,21 +122,26 @@ const useJobs = () => {
     const task_id = data.task_id;
 
     (async () => {
-      const webSocketResponse: ITask = await startWebSocket(data.task_id);
-      const response = {
-        config,
-        task_id,
-        searchs: webSocketResponse.response || [],
-        error: webSocketResponse.error,
-      };
-      updatePercentage(95, 100, 250);
-      setTimeout(() => {
-        updateJobs(
-          response.searchs.map((search) => search.keywords),
-          response.searchs,
-        );
-        setTask(() => response);
-      }, 250);
+      try {
+        const webSocketResponse: ITask = await startWebSocket(data.task_id);
+        const response = {
+          config,
+          task_id,
+          searchs: webSocketResponse.response || [],
+          error: webSocketResponse.error,
+        };
+        updatePercentage(95, 100, 250);
+        setTimeout(() => {
+          updateJobs(
+            response.searchs.map((search) => search.keywords),
+            response.searchs,
+          );
+          setTask(() => response);
+        }, 250);
+      } catch (error) {
+        console.error(error);
+        router.push("/");
+      }
     })();
   }, [updateJobs, updatePercentage, router]);
 
