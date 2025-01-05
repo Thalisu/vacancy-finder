@@ -1,6 +1,5 @@
 "use server";
 
-import { redirect } from "next/navigation";
 import { backendUrl } from "./config";
 import { IGetJobResponse, ITask } from "./types";
 
@@ -9,9 +8,9 @@ const startWebSocket = async (task_id: string): Promise<ITask> => {
   return new Promise((resolve) => {
     socket.onmessage = (event) => {
       const eventData: IGetJobResponse = JSON.parse(event.data);
-      if ("status" in eventData) {
+      if ("detail" in eventData) {
         socket.close();
-        redirect("/");
+        throw new Error(eventData.detail as string);
       }
       if (eventData.task_result) {
         resolve(eventData.task_result);
