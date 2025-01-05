@@ -6,6 +6,7 @@ export default function Jobs() {
     <div className="flex w-full grow flex-col items-center">
       <Header small={true} />
       <JobContainer />
+      <footer className="h-24 w-full" />
     </div>
   );
 }
