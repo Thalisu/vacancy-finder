@@ -78,3 +78,19 @@ export const getJobDataRemoteValueMeaning = (value: string) => {
       return value;
   }
 };
+
+export const isMinute = (what: string) => {
+  return what.includes("minutos") || what.includes("minuto");
+};
+
+export const isHour = (what: string) => {
+  return what.includes("horas") || what.includes("hora");
+};
+
+export const isDay = (what: string) => {
+  return what.includes("dia") || what.includes("dias");
+};
+
+export const isMonth = (what: string) => {
+  return what.includes("mês");
+};
