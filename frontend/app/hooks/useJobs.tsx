@@ -9,7 +9,13 @@ import {
 } from "../lib/types";
 import { useRouter } from "next/navigation";
 import { uniqBy } from "lodash";
-import { getFromSessionStorage } from "../lib/utils";
+import {
+  getFromSessionStorage,
+  isDay,
+  isHour,
+  isMinute,
+  isMonth,
+} from "../lib/utils";
 import startWebSocket from "../lib/startWebsocket";
 
 interface IResponse {
@@ -74,30 +80,48 @@ const useJobs = () => {
       jobs = jobs.sort((a, b) => {
         if (!a.state) return 1;
         if (!b.state) return -1;
+        if (isMinute(a.state) && !isMinute(b.state)) return -1;
+        if (!isMinute(a.state) && isMinute(b.state)) return 1;
+        if (isMinute(a.state) && isMinute(b.state)) {
+          const aMinutes = Number(a.state.replaceAll(/[^0-9]/g, ""));
+          const bMinutes = Number(b.state.replaceAll(/[^0-9]/g, ""));
+          if (aMinutes < bMinutes) return -1;
+          if (aMinutes > bMinutes) return 1;
+          return 0;
+        }
 
-        if (!a.state.includes("horas")) return 1;
-        if (!b.state.includes("horas")) return -1;
-        const aHours = Number(a.state.replaceAll(/[^0-9]/g, ""));
-        const bHours = Number(b.state.replaceAll(/[^0-9]/g, ""));
-        if (aHours < bHours) return -1;
-        if (aHours > bHours) return 1;
+        if (isHour(a.state) && !isHour(b.state)) return -1;
+        if (!isHour(a.state) && isHour(b.state)) return 1;
+        if (isHour(a.state) && isHour(b.state)) {
+          const aHours = Number(a.state.replaceAll(/[^0-9]/g, ""));
+          const bHours = Number(b.state.replaceAll(/[^0-9]/g, ""));
+          if (aHours < bHours) return -1;
+          if (aHours > bHours) return 1;
+          return 0;
+        }
 
-        if (!a.state.includes("dia") || !a.state.includes("dias")) return 1;
-        if (!b.state.includes("dia") || !b.state.includes("dias")) return -1;
-        const aDays = Number(a.state.replaceAll(/[^0-9]/g, ""));
-        const bDays = Number(b.state.replaceAll(/[^0-9]/g, ""));
-        if (aDays < bDays) return -1;
-        if (aDays > bDays) return 1;
+        if (isDay(a.state) && !isDay(b.state)) return -1;
+        if (!isDay(a.state) && isDay(b.state)) return 1;
+        if (isDay(a.state) && isDay(b.state)) {
+          const aDays = Number(a.state.replaceAll(/[^0-9]/g, ""));
+          const bDays = Number(b.state.replaceAll(/[^0-9]/g, ""));
+          if (aDays < bDays) return -1;
+          if (aDays > bDays) return 1;
+          return 0;
+        }
 
-        if (!a.state.includes("mês")) return 1;
-        if (!b.state.includes("mês")) return -1;
-        const aMonths = Number(a.state.replaceAll(/[^0-9]/g, ""));
-        const bMonths = Number(b.state.replaceAll(/[^0-9]/g, ""));
-        if (aMonths < bMonths) return -1;
-        if (aMonths > bMonths) return 1;
-
+        if (isMonth(a.state) && !isMonth(b.state)) return -1;
+        if (!isMonth(a.state) && isMonth(b.state)) return 1;
+        if (isMonth(a.state) && isMonth(b.state)) {
+          const aMonths = Number(a.state.replaceAll(/[^0-9]/g, ""));
+          const bMonths = Number(b.state.replaceAll(/[^0-9]/g, ""));
+          if (aMonths < bMonths) return -1;
+          if (aMonths > bMonths) return 1;
+          return 0;
+        }
         return 0;
       });
+
       setJobs(() => jobs);
     },
     [],
