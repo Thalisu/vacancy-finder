@@ -9,7 +9,7 @@ export default function KeywordInput({ dValue = "" }: { dValue?: string }) {
     }
   };
 
-  const allowedCharsRegex = /^[a-zA-Z'"-]*$/;
+  const allowedCharsRegex = /^[a-zA-Z'"-\s#.]*$/;
 
   return (
     <input
