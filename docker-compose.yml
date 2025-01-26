@@ -57,7 +57,7 @@ services:
   nginx:
     image: nginx
     ports:
-      - 698210:80
+      - 56781:80
     volumes:
       - ./nginx.conf:/etc/nginx/nginx.conf:ro
     container_name: nginx
