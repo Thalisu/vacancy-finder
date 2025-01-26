@@ -57,7 +57,7 @@ const useKeywordFields = (
       for (let i = 0; i < elementsArray.length; i++) {
         const value = (elementsArray[i] as HTMLInputElement).value;
         if (value !== "") {
-          values.push(value.replace(/[^a-zA-Z")(']/g, ""));
+          values.push(value.replace(/[^a-zA-Z")('-\s#.]/g, ""));
         } else {
           error = true;
           break;
