@@ -21,7 +21,7 @@ export async function search(
 
     const timeframe = formData.get(`time-${i}`) as string;
     const remote = formData.get(`remote-${i}`) as string;
-    const local = "Brazil";
+    const local = formData.get(`local-${i}`) as string;
     i++;
     jobRequest.push({ keywords, timeframe, remote, local });
   }
