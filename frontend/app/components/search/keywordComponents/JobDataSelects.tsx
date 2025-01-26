@@ -47,7 +47,11 @@ export default function JobDataSelects({ jobsData }: { jobsData: IJobsData }) {
             setJobSearchData((prev) => ({ ...prev, location: e.target.value })),
         }}
       >
-        <option value="Brazil">Brasil</option>
+        <option value="106057199">Brasil</option>
+        <option value="103644278">Eua</option>
+        <option value="106693272">Suíça</option>
+        <option value="100364837">Portugal</option>
+        <option value="101165590">Reino Unido</option>
       </Select>
     </div>
   );
