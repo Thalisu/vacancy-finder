@@ -41,7 +41,6 @@ export default function JobDataSelects({ jobsData }: { jobsData: IJobsData }) {
         label="Local: "
         index={0}
         selectConfig={{
-          disabled: true,
           value: jobSearchData.location,
           onChange: (e: ChangeEvent<HTMLSelectElement>) =>
             setJobSearchData((prev) => ({ ...prev, location: e.target.value })),
