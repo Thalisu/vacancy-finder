@@ -79,6 +79,28 @@ export const getJobDataRemoteValueMeaning = (value: string) => {
   }
 };
 
+export const getJobDataLocalValueMeaning = (value: string) => {
+  switch (value) {
+    case "106057199":
+      return "Brasil";
+
+    case "103644278":
+      return "Eua";
+
+    case "106693272":
+      return "Suiça";
+
+    case "100364837":
+      return "Portugal";
+
+    case "101165590":
+      return "Reino Unido";
+
+    default:
+      return value;
+  }
+};
+
 export const isMinute = (what: string) => {
   return what.includes("minutos") || what.includes("minuto");
 };

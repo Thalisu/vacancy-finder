@@ -1,5 +1,6 @@
 import { IJobsData } from "@/app/lib/types";
 import {
+  getJobDataLocalValueMeaning,
   getJobDataRemoteValueMeaning,
   getJobDataTimeValueMeaning,
 } from "@/app/lib/utils";
@@ -49,7 +50,7 @@ export default function SavedJobSearchData({
           className="invisible absolute left-0 whitespace-pre"
         />
         <span className="text-sm">
-          Local: {getJobDataRemoteValueMeaning(jobSearchData.location)}
+          Local: {getJobDataLocalValueMeaning(jobSearchData.location)}
         </span>
       </div>
     </div>
