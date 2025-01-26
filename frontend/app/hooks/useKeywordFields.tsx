@@ -20,7 +20,11 @@ const useKeywordFields = (
 
   const [extraFields, setExtraFields] = useState<React.ReactNode[]>([]);
 
-  const jobsData = { time: "r86400", remote: "1%2C2%2C3", location: "Brazil" };
+  const jobsData = {
+    time: "r86400",
+    remote: "1%2C2%2C3",
+    location: "106057199",
+  };
   const value = savedSearch
     ? { keywords: savedSearch.keywords, jobsData: savedSearch.jobsData }
     : { keywords: [""], jobsData };

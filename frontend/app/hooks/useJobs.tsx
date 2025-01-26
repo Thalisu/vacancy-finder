@@ -72,8 +72,9 @@ const useJobs = () => {
           allJobs.push(...search.jobs);
         }
       }
-
+      console.log(allJobs);
       let jobs = uniqBy(allJobs, "title");
+
       if (!promoted) {
         jobs = jobs.filter((job) => job.state !== "");
       }
