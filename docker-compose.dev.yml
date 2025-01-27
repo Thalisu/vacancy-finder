@@ -1,0 +1,76 @@
+x-backend_default: &backend
+  networks:
+    - app-network
+  env_file:
+    - "./backend/.env"
+  environment:
+    ENV_MODE: "prod"
+    REDIS_HOST: "redis"
+    REDIS_PORT: "6379"
+  depends_on:
+    - redis
+
+services:
+  frontend:
+    image: vacancy-frontend-dev
+    build:
+      context: ./frontend
+      dockerfile: dev.Dockerfile
+    volumes:
+      - ./frontend:/app
+    expose:
+      - 3000
+    environment:
+      BACKEND_URL: backend:8000
+    command: ["npm", "run", "dev"]
+    networks:
+      - app-network
+
+  backend:
+    <<: *backend
+    image: vacancy-backend
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: backend
+    expose:
+      - 8000
+    command: ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8000"]
+
+  worker:
+    <<: *backend
+    image: vacancy-backend-worker
+    build:
+      context: ./backend
+      dockerfile: worker.Dockerfile
+    container_name: worker
+    command: ["python3", "-m", "src.redis.worker"]
+    restart: always
+
+  redis:
+    image: redis
+    container_name: redis
+    restart: always
+    expose:
+      - 6379
+    volumes:
+      - ./backend/src/redis/redis_data:/data
+    networks:
+      - app-network
+
+  nginx:
+    image: nginx
+    ports:
+      - 3000:80
+    volumes:
+      - ./nginx.conf:/etc/nginx/nginx.conf:ro
+    container_name: nginx
+    depends_on:
+      - backend
+      - frontend
+    networks:
+      - app-network
+
+networks:
+  app-network:
+    driver: bridge
