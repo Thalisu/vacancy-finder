@@ -58,7 +58,7 @@ export interface IJobConfig {
   keywords: string;
   timeframe: string;
   remote: string;
-  local: string;
+  location: string;
 }
 
 export interface ILinkedinTaskData {

@@ -23,9 +23,9 @@ export async function search(
     const remote = formData.get(`remote-${i}`) as string;
     const local = formData.get(`local-${i}`) as string;
     i++;
-    jobRequest.push({ keywords, timeframe, remote, local });
+    jobRequest.push({ keywords, timeframe, remote, location: local });
   }
-
+  
   const url = new URL(`/linkedin/`, `http://${backendUrl}`);
 
   const response = await fetch(url, {
